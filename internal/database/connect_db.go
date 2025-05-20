@@ -19,5 +19,9 @@ func ConnectDB(cfg *config.Config) (*sql.DB, error) {
 	if err != nil {
 		log.Fatal("Error connecting to the database:", err)
 	}
+	if err := db.Ping(); err != nil {
+		log.Fatal("Error pinging the database:", err)
+	}
+	log.Println("Connected to the database successfully")
 	return db, nil
 }
