@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -13,9 +14,18 @@ type Config struct {
 	StoragePath string     `yaml:"storage_path" env-requied:"true"`
 	Server      HttpServer `yaml:"http_server"`
 	ApiVersion  string     `yaml:"api_version" env:"API_VERSION" env-default:"v1"`
+	DbConfig    DBCOfig    `yaml:"db" env-required:"true"`
 }
 type HttpServer struct {
 	Address string
+}
+
+type DBCOfig struct {
+	Host     string `yaml:"host" env-required:"true"`
+	Port     int    `yaml:"port" env-required:"true"`
+	User     string
+	Password string
+	DbName   string `yaml:"database" env-required:"true"`
 }
 
 func LoadConfig() *Config {
@@ -35,6 +45,13 @@ func LoadConfig() *Config {
 	}
 
 	var config Config
+
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatalf("failed to load .env file: %v", err)
+	}
+
+	config.DbConfig.User = os.Getenv("DB_USER")
+	config.DbConfig.Password = os.Getenv("DB_PASSWORD")
 
 	if err := cleanenv.ReadConfig(configPath, &config); err != nil {
 		log.Fatalf("failed to load config: %v", err)

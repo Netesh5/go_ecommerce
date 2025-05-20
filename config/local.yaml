@@ -3,3 +3,8 @@ storage_path: "storage/storage.db"
 http_server: 
   address: "localhost:8080"
 api_version: "v1"  
+db:
+  driver: "postgres"
+  database: "ecommerce_db"
+  charset: "utf8mb4"
+  collation: "utf8mb4_unicode_ci"
