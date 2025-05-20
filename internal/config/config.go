@@ -39,6 +39,7 @@ func LoadConfig() *Config {
 	if err := cleanenv.ReadConfig(configPath, &config); err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
-	return &Config{}
+	log.Printf("Config loaded successfully: %s", config.Env)
+	return &config
 
 }

@@ -10,7 +10,6 @@ import (
 
 func main() {
 	config := config.LoadConfig()
-	println("Config loaded successfully", config.Env)
 	e := echo.New()
 
 	router.RegisterRoutes(e, router.Routes, config.ApiVersion)
