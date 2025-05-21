@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/joho/godotenv"
@@ -52,6 +53,14 @@ func LoadConfig() *Config {
 
 	config.DbConfig.User = os.Getenv("DB_USER")
 	config.DbConfig.Password = os.Getenv("DB_PASSWORD")
+	config.DbConfig.Host = os.Getenv("DB_HOST")
+	config.DbConfig.DbName = os.Getenv("DB_NAME")
+
+	if port, err := strconv.Atoi(os.Getenv("DB_PORT")); err == nil {
+		config.DbConfig.Port = port
+	} else {
+		log.Fatalf("failed to convert DB_PORT to int: %v", err)
+	}
 
 	if err := cleanenv.ReadConfig(configPath, &config); err != nil {
 		log.Fatalf("failed to load config: %v", err)
