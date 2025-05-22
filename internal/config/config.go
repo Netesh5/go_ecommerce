@@ -22,11 +22,11 @@ type HttpServer struct {
 }
 
 type DBCOfig struct {
-	Host     string `yaml:"host" env-required:"true"`
-	Port     int    `yaml:"port" env-required:"true"`
+	Host     string
+	Port     int
 	User     string
 	Password string
-	DbName   string `yaml:"database" env-required:"true"`
+	DbName   string
 }
 
 func LoadConfig() *Config {
