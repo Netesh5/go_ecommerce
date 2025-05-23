@@ -1,6 +1,11 @@
 package controllers
 
-import "github.com/labstack/echo/v4"
+import (
+	"net/http"
+
+	"github.com/labstack/echo/v4"
+	contants "github.com/netesh5/go_ecommerce/internal/constant"
+)
 
 // getUser godoc
 // @Summary Get a user
@@ -17,5 +22,13 @@ func GetProducts(e echo.Context) error {
 	products := []string{"Product 1", "Product 2", "Product 3"}
 
 	return e.JSON(200, products)
+
+}
+
+func VerfiyEmail(e echo.Context) error {
+	email := e.Param("email")
+	if email == "" {
+		return e.JSON(http.StatusBadRequest, map[string]string{"error": contants.EmailValidaionError})
+	}
 
 }

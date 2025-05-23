@@ -1,6 +1,6 @@
 package types
 
-type verfication struct {
+type Verfication struct {
 	ID       int    `json:"id"`
 	UserID   int    `json:"user_id"`
 	Email    string `json:"email"`

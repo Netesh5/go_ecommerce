@@ -14,4 +14,22 @@ var Routes = Routers{
 		Path:       "/products",
 		HandleFunc: controllers.GetProducts,
 	},
+	{
+		Name:       "VerfyEmail",
+		Method:     http.MethodPost,
+		Path:       "/verify-email",
+		HandleFunc: controllers.VerifyEmail,
+	},
+	{
+		Name:       "VerifyOTP",
+		Method:     http.MethodPost,
+		Path:       "/verify-otp",
+		HandleFunc: controllers.VerifyOTP,
+	},
+	{
+		Name:       "ResendEmail",
+		Method:     http.MethodPost,
+		Path:       "/resend-email",
+		HandleFunc: controllers.ResendEmail,
+	},
 }
