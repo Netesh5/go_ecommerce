@@ -25,3 +25,16 @@ func ConnectDB(cfg *config.Config) (*sql.DB, error) {
 	log.Println("Connected to the database successfully")
 	return db, nil
 }
+
+func insertData(db *sql.DB, InsertModel interface{}) (*sql.DB, error) {
+	// Example of inserting data into a table
+	query := `INSERT INTO users (name, email) VALUES ($1, $2)`
+	_, err := db.Exec(query, "John Doe")
+	if err != nil {
+		log.Fatal("Error inserting data:", err)
+		return nil, err
+	}
+	log.Println("Data inserted successfully")
+	return db, nil
+
+}

@@ -6,7 +6,7 @@ info:
   title: Example Echo Swagger API
   version: "1.0"
 paths:
-  /api/v1/user/{id}:
+  /user/{id}:
     get:
       consumes:
       - application/json

@@ -7,6 +7,7 @@ import (
 )
 
 var Routes = Routers{
+
 	{
 		Name:       "GetProducts",
 		Method:     http.MethodGet,

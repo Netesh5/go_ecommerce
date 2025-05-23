@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type Router struct {
@@ -43,4 +43,5 @@ func RegisterRoutes(e *echo.Echo, routes Routers, apiVersion string) {
 			e.Logger.Warnf("Unsupported method %s for path %s", route.Method, route.Path)
 		}
 	}
+
 }
