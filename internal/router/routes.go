@@ -18,7 +18,7 @@ var Routes = Routers{
 		Name:       "VerfyEmail",
 		Method:     http.MethodPost,
 		Path:       "/verify-email",
-		HandleFunc: controllers.VerifyEmail,
+		HandleFunc: controllers.VerfiyEmail,
 	},
 	{
 		Name:       "VerifyOTP",
