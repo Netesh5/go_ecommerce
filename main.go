@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	_ "github.com/netesh5/go_ecommerce/docs"
 	"github.com/netesh5/go_ecommerce/internal/config"
-	"github.com/netesh5/go_ecommerce/internal/database"
+	userdb "github.com/netesh5/go_ecommerce/internal/database"
 	"github.com/netesh5/go_ecommerce/internal/router"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
@@ -25,11 +25,11 @@ func main() {
 	router.RegisterRoutes(e, router.Routes, config.ApiVersion)
 	log.Println("Server is running on port", config.Server.Address)
 	e.Logger.Fatal(e.Start(config.Server.Address))
-	db, err := database.ConnectDB(config)
+	db, err := userdb.ConnectDB(config)
 	if err != nil {
 		log.Fatal("Error connecting to the database:", err)
 	}
-	defer db.Close()
+	defer db.Db.Close()
 	log.Println("Database connection closed")
 	log.Println("Server stopped")
 }
