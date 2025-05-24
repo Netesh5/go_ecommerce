@@ -1,4 +1,4 @@
-package types
+package models
 
 type Verfication struct {
 	ID       int    `json:"id"`

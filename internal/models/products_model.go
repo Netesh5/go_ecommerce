@@ -1,4 +1,4 @@
-package types
+package models
 
 type Prouduct struct {
 	ID          int     `json:"id"`

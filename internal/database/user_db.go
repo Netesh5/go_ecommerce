@@ -4,23 +4,23 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/netesh5/go_ecommerce/internal/types"
+	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
-func (db *Postgres) GetUserByEmail(email string) (types.User, error) {
-	stmt, err := db.Db.Prepare("SELECT * FROM users WHERE email=?")
+func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
+	stmt, err := db.Db.Prepare("SELECT id, email FROM users WHERE email=$1")
 	if err != nil {
-		return types.User{}, err
+		return models.User{}, err
 	}
 	defer stmt.Close()
-	var user types.User
 
-	err = db.Db.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
+	var user models.User
+	err = stmt.QueryRow(email).Scan(&user.ID, &user.Email)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return types.User{}, fmt.Errorf("no user found with email %s", email)
+			return models.User{}, fmt.Errorf("no user found with email %s", email)
 		}
-		return types.User{}, err
+		return models.User{}, err
 	}
 	return user, nil
 
