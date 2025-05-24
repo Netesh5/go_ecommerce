@@ -26,10 +26,20 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 	if err := db.Ping(); err != nil {
 		log.Fatal("Error pinging the database:", err)
 	}
+	db.Exec(`CREATE TABLE IF NOT EXISTS users (
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(100) NOT NULL,
+		email VARCHAR(100) NOT NULL UNIQUE,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT email_format CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
+
+	)`)
 	log.Println("Connected to the database successfully")
 	return &Postgres{
 		Db: db,
 	}, nil
+
 }
 
 // func insertData(db *sql.DB, InsertModel interface{}) (*sql.DB, error) {

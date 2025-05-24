@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	userdb "github.com/netesh5/go_ecommerce/internal/database"
@@ -35,4 +36,38 @@ func SignUp(e echo.Context, db userdb.Postgres) error {
 		})
 	}
 
+	password := HashPassword(user.Password)
+	user.Password = password
+
+	user.CreatedAt = time.Now().UTC()
+	user.UpdatedAt = time.Now().UTC()
+
+	token, refreshToken, _ := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	user.Token = token
+	user.RefreshToken = refreshToken
+	user.Cart = make([]models.Cart, 0)
+	user.Address = models.Address{}
+	user.Orders = make([]models.Order, 0)
+
+	newUser, err := db.CreateUser(user)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
+			Message: err.Error(),
+		})
+
+	}
+	return e.JSON(http.StatusCreated, newUser)
+}
+
+func HashPassword(password *string) (*string, error) {
+	// Implement password hashing logic here
+	// For example, using bcrypt:
+	// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	// if err != nil {
+	//     return "", err
+	// }
+	// return string(hashedPassword), nil
+
+	// Placeholder return for now
+	return password, nil
 }

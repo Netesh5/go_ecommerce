@@ -8,7 +8,7 @@ import (
 )
 
 func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
-	stmt, err := db.Db.Prepare("SELECT id, email FROM users WHERE email=$1")
+	stmt, err := db.Db.Prepare("SELECT id, email FROM users WHERE email= ?")
 	if err != nil {
 		return models.User{}, err
 	}
@@ -26,12 +26,22 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 
 }
 
-// func GetUserByID(id int) (types.User, error) {
-// 	// Implementation to get user by ID
-// }
-// func CreateUser(user types.User) (types.User, error) {
-// 	// Implementation to create a new user
-// }
+//	func GetUserByID(id int) (types.User, error) {
+//		// Implementation to get user by ID
+//	}
+func (db *Postgres) CreateUser(user models.User) (models.User, error) {
+	res, err := db.Db.Exec(`INSERT INTO users (name, email,password,created_at,updated_at) VALUES ($1, $2,$3)`, user.Name, user.Email, user.Password, user.CreatedAt, user.UpdatedAt)
+	if err != nil {
+		return models.User{}, err
+	}
+	lastInsertID, err := res.LastInsertId()
+	if err != nil {
+		return models.User{}, err
+	}
+	user.ID = int(lastInsertID)
+	return user, nil
+}
+
 // func UpdateUser(user types.User) (types.User, error) {
 // 	// Implementation to update user details
 // }
