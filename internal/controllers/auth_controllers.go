@@ -49,14 +49,18 @@ func SignUp(e echo.Context, db userdb.Postgres) error {
 	user.Address = models.Address{}
 	user.Orders = make([]models.Order, 0)
 
-	newUser, err := db.CreateUser(user)
+	_, err = db.CreateUser(user)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
 			Message: err.Error(),
 		})
 
 	}
-	return e.JSON(http.StatusCreated, newUser)
+
+	return e.JSON(http.StatusCreated, map[string]interface{}{
+		"sucess":  true,
+		"message": "User created successfully",
+	})
 }
 
 func HashPassword(password *string) (*string, error) {
