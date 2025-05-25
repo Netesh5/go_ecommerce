@@ -75,3 +75,40 @@ func HashPassword(password *string) (*string, error) {
 	// Placeholder return for now
 	return password, nil
 }
+
+func login(e echo.Context, db userdb.Postgres) error {
+	var user models.User
+	if err := e.Bind(&user); err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
+			Message: err.Error(),
+		})
+	}
+
+	if err := e.Validate(&user); err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
+			Message: err.Error(),
+		})
+	}
+
+	res, err := db.GetUserByEmail(user.Email)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
+			Message: "user doesn't exists",
+		})
+	}
+
+	passwordValid, msg := verfifyPassword(user.Password, res.Password)
+
+	if passwordValid {
+		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
+			Message: msg,
+		})
+	}
+
+	token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
+
+	generate.UpdateAllToken(token, refreshToken, res.Id)
+
+	return e.JSON(http.StatusOK, res)
+
+}
