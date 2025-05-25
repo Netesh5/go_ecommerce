@@ -8,6 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	contants "github.com/netesh5/go_ecommerce/internal/constant"
+	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
