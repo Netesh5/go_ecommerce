@@ -1,4 +1,4 @@
-package user_interface
+package interfaces
 
 import "github.com/netesh5/go_ecommerce/internal/models"
 

@@ -1,13 +1,7 @@
 package controllers
 
 import (
-	"net/http"
-	"net/url"
-	"regexp"
-
 	"github.com/labstack/echo/v4"
-	contants "github.com/netesh5/go_ecommerce/internal/constant"
-	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 )
 
 // getUser godoc
@@ -26,20 +20,4 @@ func GetProducts(e echo.Context) error {
 
 	return e.JSON(200, products)
 
-}
-
-func VerfiyEmail(e echo.Context) error {
-	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	emailParam := e.Param("email")
-	email, err := url.QueryUnescape(emailParam)
-	if err != nil || email == "" {
-		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{Error: true, Message: contants.EmailValidaionError})
-	}
-
-	// Validate email format
-	if !emailRegex.MatchString(email) {
-		e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{Error: true, Message: contants.EmailValidaionError})
-	}
-
-	return nil
 }

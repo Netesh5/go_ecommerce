@@ -2,15 +2,17 @@ package controllers
 
 import (
 	"net/http"
+	"net/url"
+	"regexp"
 	"time"
 
 	"github.com/labstack/echo/v4"
-	userdb "github.com/netesh5/go_ecommerce/internal/database"
+	contants "github.com/netesh5/go_ecommerce/internal/constant"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
-func SignUp(e echo.Context, db userdb.Postgres) error {
+func SignUp(e echo.Context, db db.Postgres) error {
 	var user models.User
 
 	if err := e.Bind(&user); err != nil {
@@ -76,7 +78,7 @@ func HashPassword(password *string) (*string, error) {
 	return password, nil
 }
 
-func login(e echo.Context, db userdb.Postgres) error {
+func login(e echo.Context, db db.Postgres) error {
 	var user models.User
 	if err := e.Bind(&user); err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
@@ -107,8 +109,24 @@ func login(e echo.Context, db userdb.Postgres) error {
 
 	token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
 
-	generate.UpdateAllToken(token, refreshToken, res.Id)
+	generate.UpdateAllToken(token, refreshToken, res.ID)
 
 	return e.JSON(http.StatusOK, res)
 
+}
+
+func VerfiyEmail(e echo.Context) error {
+	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	emailParam := e.Param("email")
+	email, err := url.QueryUnescape(emailParam)
+	if err != nil || email == "" {
+		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{Error: true, Message: contants.EmailValidaionError})
+	}
+
+	// Validate email format
+	if !emailRegex.MatchString(email) {
+		e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{Error: true, Message: contants.EmailValidaionError})
+	}
+
+	return nil
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	_ "github.com/netesh5/go_ecommerce/docs"
 	"github.com/netesh5/go_ecommerce/internal/config"
-	userdb "github.com/netesh5/go_ecommerce/internal/database"
+	userdb "github.com/netesh5/go_ecommerce/internal/db"
 	"github.com/netesh5/go_ecommerce/internal/router"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
