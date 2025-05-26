@@ -11,8 +11,8 @@ import (
 )
 
 func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
-	productId := e.Param("id")
-	userId := e.Param("productId")
+	productId := e.Param("product_id")
+	userId := e.Param("user_id")
 
 	productIdInt, err := strconv.Atoi(productId)
 	if err != nil {
@@ -55,8 +55,8 @@ func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
 }
 
 func RemoveItem(e echo.Context, db *db.Postgres) error {
-	productId := e.Param("id")
-	userId := e.Param("userId")
+	productId := e.Param("product_id")
+	userId := e.Param("user_id")
 
 	productIdInt, err := strconv.Atoi(productId)
 	if err != nil {
@@ -82,8 +82,17 @@ func RemoveItem(e echo.Context, db *db.Postgres) error {
 	})
 }
 
-func GetItemFromCart() error {
-
+func GetItemFromCart(e echo.Context, db *db.Postgres) error {
+	userId := e.Param("user_id")
+	id, err := strconv.Atoi(userId)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("Invalid user ID"))
+	}
+	carts, err := db.GetItemFromCart(id)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+	}
+	return e.JSON(http.StatusOK, carts)
 }
 
 func BuyFromCart() error {

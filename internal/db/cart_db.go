@@ -49,3 +49,28 @@ func (db *Postgres) RemoveProductFromCart(productID int, userID int) error {
 	}
 	return nil
 }
+
+func (db *Postgres) GetItemFromCart(userID int) ([]models.Cart, error) {
+	stmt, err := db.Db.Prepare(`SELECT * FROM cart WHERE user_id=$1`)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	var carts []models.Cart
+	res, err := stmt.Query(userID)
+	if err != nil {
+		return []models.Cart{}, err
+	}
+	for res.Next() {
+		var cart models.Cart
+		if err := res.Scan(&cart.ID, &cart.UserID, &cart.ProductID, &cart.Quantity, &cart.Price, &cart.Total, &cart.Checkout, &cart.CreatedAt, &cart.UpdatedAt, &cart.DeletedAt); err != nil {
+			return []models.Cart{}, err
+		}
+		carts = append(carts, cart)
+	}
+	if err := res.Err(); err != nil {
+		return []models.Cart{}, err
+	}
+	return carts, nil
+
+}
