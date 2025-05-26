@@ -36,3 +36,16 @@ func (db *Postgres) AddProductIntoCart(cart models.Cart, product models.Prouduct
 	return err
 
 }
+
+func (db *Postgres) RemoveProductFromCart(productID int, userID int) error {
+	stmt, err := db.Db.Prepare(`DELETE FROM cart WHERE product_id=$1 AND user_id=$2`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(productID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

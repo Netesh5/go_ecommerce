@@ -54,8 +54,32 @@ func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
 
 }
 
-func RemoveItem() error {
+func RemoveItem(e echo.Context, db *db.Postgres) error {
+	productId := e.Param("id")
+	userId := e.Param("userId")
 
+	productIdInt, err := strconv.Atoi(productId)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+			"Invalid product ID",
+		))
+	}
+
+	userIdInt, err := strconv.Atoi(userId)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+			"Invalid user ID",
+		))
+	}
+
+	if err := db.RemoveProductFromCart(productIdInt, userIdInt); err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
+	}
+	return e.JSON(http.StatusOK, map[string]string{
+		"message": "Product removed from cart successfully",
+	})
 }
 
 func GetItemFromCart() error {
