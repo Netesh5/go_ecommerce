@@ -27,6 +27,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
