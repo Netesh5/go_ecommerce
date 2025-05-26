@@ -120,7 +120,6 @@ func RemoveItem(e echo.Context, db *db.Postgres) error {
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [get]
-
 func GetItemFromCart(e echo.Context, db *db.Postgres) error {
 	userId := e.Param("user_id")
 	id, err := strconv.Atoi(userId)
@@ -134,6 +133,17 @@ func GetItemFromCart(e echo.Context, db *db.Postgres) error {
 	return e.JSON(http.StatusOK, carts)
 }
 
+// BuyFromCart godoc
+// @Summary Get items from cart
+// @Description Retrieve all items in the user's cart
+// @Tags cart
+// @Accept  json
+// @Produce  json
+// @Param user_id query int true "User ID"
+// @Success 200 {array} models.Cart
+// @Failure 400 {object} errorhandler.ErrorHandler
+// @Failure 500 {object} errorhandler.ErrorHandler
+// @Router /buy-cart [get]
 func BuyFromCart(e echo.Context, db *db.Postgres) error {
 	userId := e.Param("user_id")
 	id, err := strconv.Atoi(userId)

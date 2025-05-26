@@ -123,7 +123,7 @@ func login(e echo.Context, db db.Postgres) error {
 
 	if passwordValid {
 		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
-			Message: msg,
+			Message: msg.Error(),
 		})
 	}
 

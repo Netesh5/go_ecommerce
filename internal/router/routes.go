@@ -8,12 +8,12 @@ import (
 
 var Routes = Routers{
 
-	{
-		Name:       "GetProducts",
-		Method:     http.MethodGet,
-		Path:       "/products",
-		HandleFunc: controllers.GetProducts,
-	},
+	// {
+	// 	Name:       "GetProducts",
+	// 	Method:     http.MethodGet,
+	// 	Path:       "/products",
+	// 	HandleFunc: controllers.GetProducts,
+	// },
 	{
 		Name:       "VerfyEmail",
 		Method:     http.MethodPost,
