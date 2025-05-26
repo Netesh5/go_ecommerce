@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -158,4 +159,10 @@ func VerfiyEmail(e echo.Context) error {
 	}
 
 	return nil
+}
+func verfifyPassword(userPassword string, currentPassword string) (bool, error) {
+	if err := bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(currentPassword)); err != nil {
+		return false, fmt.Errorf("Crediential is incorrect")
+	}
+	return true, nil
 }
