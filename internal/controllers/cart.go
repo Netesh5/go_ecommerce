@@ -10,6 +10,20 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
+// AddToCart godoc
+// @Summary Add product to cart
+// @Description Add a product to the user's cart
+// @Tags cart
+// @Accept  json
+// @Produce  json
+// @Param product_id path int true "Product ID"
+// @Param user_id path int true "User ID"
+// @Param cart body models.Cart true "Cart object"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} errorhandler.ErrorHandler
+// @Failure 500 {object} errorhandler.ErrorHandler
+// @Router /cart [post]
+
 func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
 	productId := e.Param("product_id")
 	userId := e.Param("user_id")
@@ -54,6 +68,19 @@ func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
 
 }
 
+// RemoveItem godoc
+// @Summary Remove product from cart
+// @Description Remove a product from the user's cart
+// @Tags cart
+// @Accept  json
+// @Produce  json
+// @Param product_id path int true "Product ID"
+// @Param user_id path int true "User ID"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} errorhandler.ErrorHandler
+// @Failure 500 {object} errorhandler.ErrorHandler
+// @Router /cart [delete]
+
 func RemoveItem(e echo.Context, db *db.Postgres) error {
 	productId := e.Param("product_id")
 	userId := e.Param("user_id")
@@ -82,6 +109,18 @@ func RemoveItem(e echo.Context, db *db.Postgres) error {
 	})
 }
 
+// GetItemFromCart godoc
+// @Summary Get items from cart
+// @Description Retrieve all items in the user's cart
+// @Tags cart
+// @Accept  json
+// @Produce  json
+// @Param user_id path int true "User ID"
+// @Success 200 {array} models.Cart
+// @Failure 400 {object} errorhandler.ErrorHandler
+// @Failure 500 {object} errorhandler.ErrorHandler
+// @Router /cart [get]
+
 func GetItemFromCart(e echo.Context, db *db.Postgres) error {
 	userId := e.Param("user_id")
 	id, err := strconv.Atoi(userId)
@@ -95,6 +134,7 @@ func GetItemFromCart(e echo.Context, db *db.Postgres) error {
 	return e.JSON(http.StatusOK, carts)
 }
 
-func BuyFromCart() error {
+// func BuyFromCart() error {
 
-}
+// 	f
+// }

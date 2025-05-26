@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	contants "github.com/netesh5/go_ecommerce/internal/constant"
@@ -12,6 +11,17 @@ import (
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
+
+// signup godoc
+// @Summary singup
+// @Description User signup
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param user body models.User true "User object"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Router /signup [post]
 
 func SignUp(e echo.Context, db db.Postgres) error {
 	var user models.User
@@ -39,15 +49,15 @@ func SignUp(e echo.Context, db db.Postgres) error {
 		})
 	}
 
-	password := HashPassword(user.Password)
-	user.Password = password
+	// password, err := HashPassword(user.Password)
+	// user.Password = password
 
-	user.CreatedAt = time.Now().UTC()
-	user.UpdatedAt = time.Now().UTC()
+	// user.CreatedAt = time.Now().UTC()
+	// user.UpdatedAt = time.Now().UTC()
 
-	token, refreshToken, _ := generate.TokenGenerator(user.Email, user.Name, user.ID)
-	user.Token = token
-	user.RefreshToken = refreshToken
+	// token, refreshToken, _ := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	// user.Token = token
+	// user.RefreshToken = refreshToken
 	user.Cart = make([]models.Cart, 0)
 	user.Address = models.Address{}
 	user.Orders = make([]models.Order, 0)
@@ -79,6 +89,17 @@ func HashPassword(password *string) (*string, error) {
 	return password, nil
 }
 
+// Login godoc
+// @Summary Login
+// @Description User login
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param user body models.User true "User object"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Router /login [post]
+
 func login(e echo.Context, db db.Postgres) error {
 	var user models.User
 	if err := e.Bind(&user); err != nil {
@@ -100,21 +121,32 @@ func login(e echo.Context, db db.Postgres) error {
 		))
 	}
 
-	passwordValid, msg := verfifyPassword(user.Password, res.Password)
+	// passwordValid, msg := verfifyPassword(user.Password, res.Password)
 
-	if passwordValid {
-		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
-			Message: msg,
-		})
-	}
+	// if passwordValid {
+	// 	return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
+	// 		Message: msg,
+	// 	})
+	// }
 
-	token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	// token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
 
-	generate.UpdateAllToken(token, refreshToken, res.ID)
+	// generate.UpdateAllToken(token, refreshToken, res.ID)
 
 	return e.JSON(http.StatusOK, res)
 
 }
+
+// VerfiyEmail godoc
+// @Summary Verify Email
+// @Description Verify email format
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param email path string true "Email address"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Router /verify-email [get]
 
 func VerfiyEmail(e echo.Context) error {
 	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
