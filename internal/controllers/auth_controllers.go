@@ -15,14 +15,13 @@ import (
 // signup godoc
 // @Summary singup
 // @Description User signup
-// @Tags users
+// @Tags auth
 // @Accept  json
 // @Produce  json
 // @Param user body models.User true "User object"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /signup [post]
-
 func SignUp(e echo.Context, db db.Postgres) error {
 	var user models.User
 
@@ -92,14 +91,13 @@ func HashPassword(password *string) (*string, error) {
 // Login godoc
 // @Summary Login
 // @Description User login
-// @Tags users
+// @Tags auth
 // @Accept  json
 // @Produce  json
 // @Param user body models.User true "User object"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
-
 func login(e echo.Context, db db.Postgres) error {
 	var user models.User
 	if err := e.Bind(&user); err != nil {
@@ -140,14 +138,13 @@ func login(e echo.Context, db db.Postgres) error {
 // VerfiyEmail godoc
 // @Summary Verify Email
 // @Description Verify email format
-// @Tags users
+// @Tags auth
 // @Accept  json
 // @Produce  json
-// @Param email path string true "Email address"
+// @Param email query string true "Email address"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /verify-email [get]
-
 func VerfiyEmail(e echo.Context) error {
 	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	emailParam := e.Param("email")

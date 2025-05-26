@@ -134,7 +134,25 @@ func GetItemFromCart(e echo.Context, db *db.Postgres) error {
 	return e.JSON(http.StatusOK, carts)
 }
 
-// func BuyFromCart() error {
+func BuyFromCart(e echo.Context, db *db.Postgres) error {
+	userId := e.Param("user_id")
+	id, err := strconv.Atoi(userId)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("Invalid user ID"))
+	}
+	carts, err := db.GetItemFromCart(id)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+	}
 
-// 	f
-// }
+	for _, cart := range carts {
+		if err := db.RemoveProductFromCart(cart.ProductID, cart.UserID); err != nil {
+			return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+		}
+
+	}
+	return e.JSON(http.StatusOK, map[string]string{
+		"success": "true",
+		"message": "Products purchased successfully",
+	})
+}
