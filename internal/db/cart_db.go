@@ -74,3 +74,32 @@ func (db *Postgres) GetItemFromCart(userID int) ([]models.Cart, error) {
 	return carts, nil
 
 }
+
+func (db *Postgres) SearchProducts(query string) ([]models.Prouduct, error) {
+	stmt, err := db.Db.Prepare(`SELECT * FROM products WHERE name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%'`)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var products []models.Prouduct
+	res, err := stmt.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Close()
+
+	for res.Next() {
+		var product models.Prouduct
+		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt, &product.DeletedAt); err != nil {
+			return nil, err
+		}
+		products = append(products, product)
+	}
+
+	if err := res.Err(); err != nil {
+		return nil, err
+	}
+
+	return products, nil
+}

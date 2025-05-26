@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+	"github.com/netesh5/go_ecommerce/internal/db"
 )
 
 // getUser godoc
@@ -20,4 +23,18 @@ func GetProducts(e echo.Context) error {
 
 	return e.JSON(200, products)
 
+}
+
+func SearchProducts(e echo.Context, db *db.Postgres) error {
+	query := e.QueryParam("search")
+	if query == "" {
+		return e.JSON(http.StatusBadRequest, map[string]string{"error": "search parameter is required"})
+
+	}
+
+	products, err := db.SearchProducts(query)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return e.JSON(http.StatusOK, products)
 }
