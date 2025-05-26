@@ -11,7 +11,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @title Example Echo Swagger API
+// @title Ecommerce API Swagger
 // @version 1.0
 // @description This is a sample server using Echo.
 // @host localhost:8080
