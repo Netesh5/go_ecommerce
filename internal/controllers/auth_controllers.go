@@ -4,12 +4,14 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	contants "github.com/netesh5/go_ecommerce/internal/constant"
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // signup godoc
@@ -48,15 +50,15 @@ func SignUp(e echo.Context, db db.Postgres) error {
 		})
 	}
 
-	// password, err := HashPassword(user.Password)
-	// user.Password = password
+	password, err := HashPassword(user.Password)
+	user.Password = password
 
-	// user.CreatedAt = time.Now().UTC()
-	// user.UpdatedAt = time.Now().UTC()
+	user.CreatedAt = time.Now().UTC()
+	user.UpdatedAt = time.Now().UTC()
 
-	// token, refreshToken, _ := generate.TokenGenerator(user.Email, user.Name, user.ID)
-	// user.Token = token
-	// user.RefreshToken = refreshToken
+	token, refreshToken, _ := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	user.Token = token
+	user.RefreshToken = refreshToken
 	user.Cart = make([]models.Cart, 0)
 	user.Address = models.Address{}
 	user.Orders = make([]models.Order, 0)
@@ -75,17 +77,14 @@ func SignUp(e echo.Context, db db.Postgres) error {
 	})
 }
 
-func HashPassword(password *string) (*string, error) {
-	// Implement password hashing logic here
-	// For example, using bcrypt:
-	// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	// if err != nil {
-	//     return "", err
-	// }
-	// return string(hashedPassword), nil
+func HashPassword(password string) (string, error) {
 
-	// Placeholder return for now
-	return password, nil
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+
+	return string(bytes), nil
 }
 
 // Login godoc
@@ -119,17 +118,17 @@ func login(e echo.Context, db db.Postgres) error {
 		))
 	}
 
-	// passwordValid, msg := verfifyPassword(user.Password, res.Password)
+	passwordValid, msg := verfifyPassword(user.Password, res.Password)
 
-	// if passwordValid {
-	// 	return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
-	// 		Message: msg,
-	// 	})
-	// }
+	if passwordValid {
+		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
+			Message: msg,
+		})
+	}
 
-	// token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
 
-	// generate.UpdateAllToken(token, refreshToken, res.ID)
+	generate.UpdateAllToken(token, refreshToken, res.ID)
 
 	return e.JSON(http.StatusOK, res)
 
