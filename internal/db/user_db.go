@@ -26,9 +26,6 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 
 }
 
-//	func GetUserByID(id int) (types.User, error) {
-//		// Implementation to get user by ID
-//	}
 func (db *Postgres) CreateUser(user models.User) (models.User, error) {
 	res, err := db.Db.Exec(`INSERT INTO users (name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)`, user.Name, user.Email, user.Password, user.CreatedAt, user.UpdatedAt)
 	if err != nil {
@@ -41,13 +38,6 @@ func (db *Postgres) CreateUser(user models.User) (models.User, error) {
 	user.ID = int(lastInsertID)
 	return user, nil
 }
-
-// func UpdateUser(user types.User) (types.User, error) {
-// 	// Implementation to update user details
-// }
-// func DeleteUser(id int) error {
-// 	// Implementation to delete a user by ID
-// }
 
 func (db *Postgres) GetUserByID(id int) (models.User, error) {
 	stmt, err := db.Db.Prepare("SELECT id, name, email FROM users WHERE id = $1")
@@ -64,5 +54,20 @@ func (db *Postgres) GetUserByID(id int) (models.User, error) {
 		}
 		return models.User{}, err
 	}
+	return user, nil
+}
+
+func (db *Postgres) UpdateUser(user models.User) (models.User, error) {
+	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4 WHERE id = $5`)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.ID)
+	if err != nil {
+		return models.User{}, err
+	}
+
 	return user, nil
 }
