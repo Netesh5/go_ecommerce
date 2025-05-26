@@ -17,21 +17,21 @@ func SignUp(e echo.Context, db db.Postgres) error {
 	var user models.User
 
 	if err := e.Bind(&user); err != nil {
-		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
-			Message: err.Error(),
-		})
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
 	}
 
 	if err := e.Validate(&user); err != nil {
-		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
-			Message: err.Error(),
-		})
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
 	}
 	res, err := db.GetUserByEmail(user.Email)
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
-			Message: err.Error(),
-		})
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
 	}
 	if res.ID != 0 {
 		return e.JSON(http.StatusConflict, errorhandler.ErrorHandler{
@@ -82,22 +82,22 @@ func HashPassword(password *string) (*string, error) {
 func login(e echo.Context, db db.Postgres) error {
 	var user models.User
 	if err := e.Bind(&user); err != nil {
-		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
-			Message: err.Error(),
-		})
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
 	}
 
 	if err := e.Validate(&user); err != nil {
-		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{
-			Message: err.Error(),
-		})
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
 	}
 
 	res, err := db.GetUserByEmail(user.Email)
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
-			Message: "user doesn't exists",
-		})
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
+			"user doesn't exists",
+		))
 	}
 
 	passwordValid, msg := verfifyPassword(user.Password, res.Password)
@@ -121,12 +121,12 @@ func VerfiyEmail(e echo.Context) error {
 	emailParam := e.Param("email")
 	email, err := url.QueryUnescape(emailParam)
 	if err != nil || email == "" {
-		return e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{Error: true, Message: contants.EmailValidaionError})
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(contants.EmailValidaionError))
 	}
 
 	// Validate email format
 	if !emailRegex.MatchString(email) {
-		e.JSON(http.StatusBadRequest, errorhandler.ErrorHandler{Error: true, Message: contants.EmailValidaionError})
+		e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(contants.EmailValidaionError))
 	}
 
 	return nil
