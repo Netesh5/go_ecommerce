@@ -20,7 +20,7 @@ func TokenGenerator(email string, name string, id int) (token string, refreshTok
 		Name:  name,
 		ID:    id,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: jwt.TimeFunc().Add(time.Hour * 48).Unix(), // Token valid for 24 hours
+			ExpiresAt: jwt.TimeFunc().Add(time.Hour * 48).Unix(), // Token valid for 48 hours
 			IssuedAt:  jwt.TimeFunc().Unix(),                     // Token issued at current time
 			Issuer:    "go_ecommerce",
 		},
@@ -58,6 +58,41 @@ func TokenValidator() {
 
 }
 
-func UpdateAllTokens() {
+func UpdateAllTokens(token string, refreshToken string, userId int) (string, string, error) {
+	var SECRET_KEY = os.Getenv("SECRET_KEY")
+	if SECRET_KEY == "" {
+		return "", "", jwt.NewValidationError("SECRET_KEY not set", jwt.ValidationErrorClaimsInvalid)
+	}
 
+	claims := &SignDetails{
+		ID: userId,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: jwt.TimeFunc().Add(time.Hour * 48).Unix(),
+			IssuedAt:  jwt.TimeFunc().Unix(),
+			Issuer:    "go_ecommerce",
+		},
+	}
+
+	refreshClaims := &SignDetails{
+		ID: userId,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: jwt.TimeFunc().Add(time.Hour * 168).Unix(),
+			IssuedAt:  jwt.TimeFunc().Unix(),
+			Issuer:    "go_ecommerce",
+		},
+	}
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
+	if err != nil {
+		return "", "", err
+	}
+
+	refreshToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString([]byte(SECRET_KEY))
+	if err != nil {
+		return "", "", err
+	}
+	if token == "" || refreshToken == "" {
+		return "", "", jwt.NewValidationError("Token generation failed", jwt.ValidationErrorClaimsInvalid)
+	}
+
+	return token, refreshToken, nil
 }

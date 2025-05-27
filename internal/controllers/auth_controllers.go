@@ -12,6 +12,7 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
+	token "github.com/netesh5/go_ecommerce/internal/tokens"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -57,7 +58,7 @@ func SignUp(e echo.Context, db db.Postgres) error {
 	user.CreatedAt = time.Now().UTC()
 	user.UpdatedAt = time.Now().UTC()
 
-	token, refreshToken, _ := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	token, refreshToken, _ := token.TokenGenerator(user.Email, user.Name, user.ID)
 	user.Token = token
 	user.RefreshToken = refreshToken
 	user.Cart = make([]models.Cart, 0)
@@ -127,9 +128,9 @@ func login(e echo.Context, db db.Postgres) error {
 		})
 	}
 
-	token, refresh := generate.TokenGenerator(user.Email, user.Name, user.ID)
+	accessToken, refreshToken, err := token.TokenGenerator(user.Email, user.Name, user.ID)
 
-	generate.UpdateAllToken(token, refreshToken, res.ID)
+	token.UpdateAllTokens(accessToken, refreshToken, res.ID)
 
 	return e.JSON(http.StatusOK, res)
 
