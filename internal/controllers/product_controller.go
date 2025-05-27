@@ -31,14 +31,19 @@ import (
 // @Tags products
 // @Accept  json
 // @Produce  json
-// @Param query path query true "query string for searching products"
+// @Param query query string true "query string for searching products"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
-// @Router /user/{query} [get]
+// @Router /products [get]
 func SearchProducts(e echo.Context, db *db.Postgres) error {
+
 	query := e.QueryParam("query")
 	if query == "" {
-		return e.JSON(http.StatusBadRequest, map[string]string{"error": "search parameter is required"})
+		products, err := db.GetAllProducts()
+		if err != nil {
+			return e.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+		return e.JSON(http.StatusOK, products)
 
 	}
 
