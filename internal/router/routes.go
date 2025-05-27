@@ -32,4 +32,33 @@ var Routes = Routers{
 		Path:   "/resend-email",
 		// HandleFunc: controllers.ResendEmail,
 	},
+	{
+		Name:       "SearchProducts",
+		Method:     http.MethodGet,
+		Path:       "/products",
+		HandleFunc: controllers.SearchProducts,
+	},
+	// {
+	// 	Name:       "GetProductByID",
+	// 	Method:     http.MethodGet,
+	// 	Path: 	 "/products/:id",
+	// }
+	{
+		Name:       "AddProductToCart",
+		Method:     http.MethodPost,
+		Path:       "/cart",
+		HandleFunc: controllers.AddProductToCart,
+	},
+	{
+		Name:       "RemoveProductFromCart",
+		Method:     http.MethodDelete,
+		Path:       "/cart/:product_id",
+		HandleFunc: controllers.RemoveProductFromCart,
+	},
+	{
+		Name:       "GetCartItems",
+		Method:     http.MethodGet,
+		Path:       "/cart",
+		HandleFunc: controllers.GetCartItems,
+	},
 }

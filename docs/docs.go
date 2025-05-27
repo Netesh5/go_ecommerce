@@ -153,9 +153,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/product/{query}": {
+        "/products": {
             "get": {
-                "description": "Search products by query",
+                "description": "Search products by query (optional)",
                 "consumes": [
                     "application/json"
                 ],
@@ -171,8 +171,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "query string for searching products",
                         "name": "query",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {

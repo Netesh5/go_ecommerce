@@ -9,7 +9,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	contants "github.com/netesh5/go_ecommerce/internal/constant"
-	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 	token "github.com/netesh5/go_ecommerce/internal/tokens"
@@ -26,7 +25,7 @@ import (
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /signup [post]
-func SignUp(e echo.Context, db db.Postgres) error {
+func (pc *PostgresController) SignUp(e echo.Context) error {
 	var user models.User
 
 	if err := e.Bind(&user); err != nil {
@@ -40,7 +39,7 @@ func SignUp(e echo.Context, db db.Postgres) error {
 			err.Error(),
 		))
 	}
-	res, err := db.GetUserByEmail(user.Email)
+	res, err := pc.DB.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			err.Error(),
@@ -65,7 +64,7 @@ func SignUp(e echo.Context, db db.Postgres) error {
 	user.Address = models.Address{}
 	user.Orders = make([]models.Order, 0)
 
-	_, err = db.CreateUser(user)
+	_, err = pc.DB.CreateUser(user)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
 			Message: err.Error(),
@@ -99,7 +98,7 @@ func HashPassword(password string) (string, error) {
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
-func login(e echo.Context, db db.Postgres) error {
+func (pc *PostgresController) login(e echo.Context) error {
 	var user models.User
 	if err := e.Bind(&user); err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
@@ -113,7 +112,7 @@ func login(e echo.Context, db db.Postgres) error {
 		))
 	}
 
-	res, err := db.GetUserByEmail(user.Email)
+	res, err := pc.DB.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			"user doesn't exists",
@@ -129,8 +128,13 @@ func login(e echo.Context, db db.Postgres) error {
 	}
 
 	accessToken, refreshToken, err := token.TokenGenerator(user.Email, user.Name, user.ID)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+	}
 
-	token.UpdateAllTokens(accessToken, refreshToken, res.ID)
+	res.Token = accessToken
+	res.RefreshToken = refreshToken
+	pc.DB.UpdateUser(res)
 
 	return e.JSON(http.StatusOK, res)
 

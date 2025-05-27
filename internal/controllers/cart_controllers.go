@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
@@ -23,8 +22,7 @@ import (
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [post]
-
-func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
+func (pc *PostgresController) AddToCart(e echo.Context, cart models.Cart) error {
 	productId := e.Param("product_id")
 	userId := e.Param("user_id")
 
@@ -43,21 +41,21 @@ func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
 		))
 	}
 
-	product, err := db.GetProductByID(productIdInt)
+	product, err := pc.DB.GetProductByID(productIdInt)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			err.Error(),
 		))
 	}
 
-	user, err := db.GetUserByID(userIdInt)
+	user, err := pc.DB.GetUserByID(userIdInt)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			err.Error(),
 		))
 	}
 
-	if err := db.AddProductIntoCart(cart, product, user); err != nil {
+	if err := pc.DB.AddProductIntoCart(cart, product, user); err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			err.Error(),
 		))
@@ -80,8 +78,7 @@ func AddToCart(e echo.Context, db db.Postgres, cart models.Cart) error {
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [delete]
-
-func RemoveItem(e echo.Context, db *db.Postgres) error {
+func (pc *PostgresController) RemoveItem(e echo.Context) error {
 	productId := e.Param("product_id")
 	userId := e.Param("user_id")
 
@@ -99,7 +96,7 @@ func RemoveItem(e echo.Context, db *db.Postgres) error {
 		))
 	}
 
-	if err := db.RemoveProductFromCart(productIdInt, userIdInt); err != nil {
+	if err := pc.DB.RemoveProductFromCart(productIdInt, userIdInt); err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			err.Error(),
 		))
@@ -120,13 +117,13 @@ func RemoveItem(e echo.Context, db *db.Postgres) error {
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [get]
-func GetItemFromCart(e echo.Context, db *db.Postgres) error {
+func (pc *PostgresController) GetItemFromCart(e echo.Context) error {
 	userId := e.Param("user_id")
 	id, err := strconv.Atoi(userId)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("Invalid user ID"))
 	}
-	carts, err := db.GetItemFromCart(id)
+	carts, err := pc.DB.GetItemFromCart(id)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
@@ -144,19 +141,19 @@ func GetItemFromCart(e echo.Context, db *db.Postgres) error {
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /buy-cart [get]
-func BuyFromCart(e echo.Context, db *db.Postgres) error {
+func (pc *PostgresController) BuyFromCart(e echo.Context) error {
 	userId := e.Param("user_id")
 	id, err := strconv.Atoi(userId)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("Invalid user ID"))
 	}
-	carts, err := db.GetItemFromCart(id)
+	carts, err := pc.DB.GetItemFromCart(id)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
 
 	for _, cart := range carts {
-		if err := db.RemoveProductFromCart(cart.ProductID, cart.UserID); err != nil {
+		if err := pc.DB.RemoveProductFromCart(cart.ProductID, cart.UserID); err != nil {
 			return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 		}
 

@@ -58,13 +58,13 @@ func (db *Postgres) GetUserByID(id int) (models.User, error) {
 }
 
 func (db *Postgres) UpdateUser(user models.User) (models.User, error) {
-	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4 WHERE id = $5`)
+	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4,token=$5,refresh_token=$6,phone=$7,address=$8,cart=$9,orders=$10 WHERE id = $11`)
 	if err != nil {
 		return models.User{}, err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.ID)
+	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.Address, user.Cart, user.Orders, user.ID)
 	if err != nil {
 		return models.User{}, err
 	}
