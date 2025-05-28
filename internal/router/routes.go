@@ -52,13 +52,13 @@ var Routes = Routers{
 	{
 		Name:       "RemoveProductFromCart",
 		Method:     http.MethodDelete,
-		Path:       "/cart/:product_id",
-		HandleFunc: controllers.RemoveProductFromCart,
+		Path:       "/cart",
+		HandleFunc: controllers.RemoveItemFromCart,
 	},
 	{
 		Name:       "GetCartItems",
 		Method:     http.MethodGet,
 		Path:       "/cart",
-		HandleFunc: controllers.GetCartItems,
+		HandleFunc: controllers.GetItemFromCart,
 	},
 }
