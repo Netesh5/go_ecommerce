@@ -9,6 +9,7 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/config"
 	userdb "github.com/netesh5/go_ecommerce/internal/db"
 	"github.com/netesh5/go_ecommerce/internal/router"
+	"github.com/netesh5/go_ecommerce/internal/utils"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -20,6 +21,8 @@ import (
 func main() {
 	config := config.LoadConfig()
 	e := echo.New()
+
+	e.Validator = utils.NewValidator()
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	db, err := userdb.ConnectDB(config)
