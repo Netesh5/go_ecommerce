@@ -62,7 +62,7 @@ func SignUp(e echo.Context) error {
 	user.Token = token
 	user.RefreshToken = refreshToken
 	user.Cart = make([]models.Cart, 0)
-	user.Address = models.Address{}
+	user.Address = make([]models.Address, 0)
 	user.Orders = make([]models.Order, 0)
 
 	_, err = postgres.CreateUser(user)

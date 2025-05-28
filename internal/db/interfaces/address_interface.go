@@ -5,6 +5,6 @@ import (
 )
 
 type IAddress interface {
-	UpdateAddress(models.Address) error
-	DeleteAddress(id int) error
+	UpdateUserAddress(models.Address) error
+	DeleteUserAddress(id int) error
 }

@@ -1,11 +1,11 @@
 package models
 
 type Cart struct {
-	ID        int    `json:"id"`
-	UserID    int    `json:"user_id"`
-	ProductID int    `json:"product_id"`
-	Quantity  int    `json:"quantity"`
-	Price     string `json:"price"`
+	ID        int    `json:"id" validate:"required"`
+	UserID    int    `json:"user_id" validate:"required"`
+	ProductID int    `json:"product_id" validate:"required"`
+	Quantity  int    `json:"quantity" validate:"required"`
+	Price     string `json:"price" validate:"required"`
 	Total     string `json:"total"`
 	Checkout  bool   `json:"checkout"`
 	CreatedAt string `json:"created_at"`
@@ -14,10 +14,10 @@ type Cart struct {
 }
 
 type Order struct {
-	ID          int     `json:"id"`
-	UserID      int     `json:"user_id"`
-	ProductID   int     `json:"product_id"`
-	Quantity    int     `json:"quantity"`
+	ID          int     `json:"id" validate:"required"`
+	UserID      int     `json:"user_id" validate:"required"`
+	ProductID   int     `json:"product_id" validate:"required"`
+	Quantity    int     `json:"quantity" validate:"required"`
 	TotalPrice  float64 `json:"total_price"`
 	OrderStatus string  `json:"order_status"`
 	CreatedAt   string  `json:"created_at"`

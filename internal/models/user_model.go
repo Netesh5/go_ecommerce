@@ -15,12 +15,13 @@ type User struct {
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	DeletedAt    time.Time `json:"deleted_at"`
-	Address      Address   `json:"address" validate:"required"`
+	Address      []Address `json:"address" validate:"required"`
 	Cart         []Cart    `json:"cart"`
 	Orders       []Order   `json:"orders"`
 }
 
 type Address struct {
+	Id        int    `json:"id"`
 	Address   string `json:"address"`
 	City      string `json:"city"`
 	State     string `json:"state"`
