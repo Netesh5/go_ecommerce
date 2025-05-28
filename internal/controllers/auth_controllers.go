@@ -41,11 +41,11 @@ func SignUp(e echo.Context) error {
 		))
 	}
 	res, err := postgres.GetUserByEmail(user.Email)
-	if err != nil {
-		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
-			err.Error(),
-		))
-	}
+	// if err != nil {
+	// 	return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
+	// 		err.Error(),
+	// 	))
+	// }
 	if res.ID != 0 {
 		return e.JSON(http.StatusConflict, errorhandler.ErrorHandler{
 			Message: "User already exists",

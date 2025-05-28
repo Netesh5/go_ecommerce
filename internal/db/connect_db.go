@@ -32,8 +32,15 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(100) NOT NULL,
 		email VARCHAR(100) NOT NULL UNIQUE,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		password VARCHAR(100) NOT NULL,
+		phone VARCHAR(15) NOT NULL,
+		token VARCHAR(255) NOT NULL,
+		refresh_token VARCHAR(255) NOT NULL,
+		address VARCHAR(100) NOT NULL,
+		cart VARCHAR(100) NOT NULL,
+		orders VARCHAR(100) NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		CONSTRAINT email_format CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
 
 	)`)
