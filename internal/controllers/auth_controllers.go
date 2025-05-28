@@ -53,6 +53,9 @@ func SignUp(e echo.Context) error {
 	}
 
 	password, err := HashPassword(user.Password)
+	if err != nil {
+		return err
+	}
 	user.Password = password
 
 	user.CreatedAt = time.Now().UTC()

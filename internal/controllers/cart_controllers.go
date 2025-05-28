@@ -25,8 +25,6 @@ import (
 // @Router /cart [post]
 func AddItemToCart(e echo.Context) error {
 	postgres := db.DB()
-	// productId := e.Param("product_id")
-	// userId := e.Param("user_id")
 
 	var cart models.Cart
 
@@ -34,21 +32,6 @@ func AddItemToCart(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(err.Error()))
 	}
-
-	// productIdInt, err := strconv.Atoi(productId)
-	// if err != nil {
-	// 	return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
-
-	// 		"Invalid product ID",
-	// 	))
-	// }
-
-	// userIdInt, err := strconv.Atoi(userId)
-	// if err != nil {
-	// 	return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
-	// 		"Invalid user ID",
-	// 	))
-	// }
 
 	product, err := postgres.GetProductByID(cart.ProductID)
 	if err != nil {
@@ -129,18 +112,12 @@ func RemoveItemFromCart(e echo.Context) error {
 // @Router /cart [get]
 func GetItemFromCart(e echo.Context) error {
 	postgres := db.DB()
-	// userId := e.Param("user_id")
-
 	var cart models.Cart
 	err := e.Bind(&cart)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(err.Error()))
 	}
 
-	// id, err := strconv.Atoi()
-	// if err != nil {
-	// 	return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("Invalid user ID"))
-	// }
 	carts, err := postgres.GetItemFromCart(cart.ID)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
@@ -161,11 +138,7 @@ func GetItemFromCart(e echo.Context) error {
 // @Router /buy-cart [get]
 func BuyFromCart(e echo.Context) error {
 	postgres := db.DB()
-	// userId := e.Param("user_id")
-	// id, err := strconv.Atoi(userId)
-	// if err != nil {
-	// 	return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("Invalid user ID"))
-	// }
+
 	var cart models.Cart
 	err := e.Bind(&cart)
 	if err != nil {

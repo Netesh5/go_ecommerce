@@ -74,6 +74,7 @@ func TokenValidator(tokenString string) (claims *SignDetails, message string) {
 	if !ok || !token.Valid {
 		return nil, "Invalid token"
 	}
+
 	if claims.ExpiresAt < jwt.TimeFunc().Unix() {
 		return nil, "Token has expired"
 	}
