@@ -107,6 +107,119 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Add a product to the user's cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cart"
+                ],
+                "summary": "Add product to cart",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Cart object",
+                        "name": "cart",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Cart"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove a product from the user's cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cart"
+                ],
+                "summary": "Remove product from cart",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                        }
+                    }
+                }
             }
         },
         "/login": {
@@ -238,6 +351,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/address": {
+            "delete": {
+                "description": "Removes a specified address associated with a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Delete a user's address",
+                "parameters": [
+                    {
+                        "description": "Address information containing Id and UserId",
+                        "name": "address",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Address"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address successfully deleted"
+                    },
+                    "400": {
+                        "description": "Invalid input or deletion error"
+                    }
+                }
+            }
+        },
         "/verify-email": {
             "get": {
                 "description": "Verify email format",
@@ -311,6 +458,9 @@ const docTemplate = `{
                 "deleted_at": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "state": {
                     "type": "string"
                 },
@@ -327,6 +477,13 @@ const docTemplate = `{
         },
         "models.Cart": {
             "type": "object",
+            "required": [
+                "id",
+                "price",
+                "product_id",
+                "quantity",
+                "user_id"
+            ],
             "properties": {
                 "checkout": {
                     "type": "boolean"
@@ -362,6 +519,12 @@ const docTemplate = `{
         },
         "models.Order": {
             "type": "object",
+            "required": [
+                "id",
+                "product_id",
+                "quantity",
+                "user_id"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -403,7 +566,10 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
-                    "$ref": "#/definitions/models.Address"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
                 },
                 "cart": {
                     "type": "array",

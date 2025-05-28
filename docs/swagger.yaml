@@ -19,6 +19,8 @@ definitions:
         type: string
       deleted_at:
         type: string
+      id:
+        type: integer
       state:
         type: string
       updated_at:
@@ -50,6 +52,12 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - id
+    - price
+    - product_id
+    - quantity
+    - user_id
     type: object
   models.Order:
     properties:
@@ -71,11 +79,18 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - id
+    - product_id
+    - quantity
+    - user_id
     type: object
   models.User:
     properties:
       address:
-        $ref: '#/definitions/models.Address'
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
       cart:
         items:
           $ref: '#/definitions/models.Cart'
@@ -153,6 +168,41 @@ paths:
       tags:
       - cart
   /cart:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a product from the user's cart
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+      summary: Remove product from cart
+      tags:
+      - cart
     get:
       consumes:
       - application/json
@@ -181,6 +231,47 @@ paths:
           schema:
             $ref: '#/definitions/errorhandler.ErrorHandler'
       summary: Get items from cart
+      tags:
+      - cart
+    post:
+      consumes:
+      - application/json
+      description: Add a product to the user's cart
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Cart object
+        in: body
+        name: cart
+        required: true
+        schema:
+          $ref: '#/definitions/models.Cart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+      summary: Add product to cart
       tags:
       - cart
   /login:
@@ -268,6 +359,28 @@ paths:
       summary: singup
       tags:
       - auth
+  /user/address:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a specified address associated with a user
+      parameters:
+      - description: Address information containing Id and UserId
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/models.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Address successfully deleted
+        "400":
+          description: Invalid input or deletion error
+      summary: Delete a user's address
+      tags:
+      - addresses
   /verify-email:
     get:
       consumes:

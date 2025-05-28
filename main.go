@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	_ "github.com/lib/pq"
 	_ "github.com/netesh5/go_ecommerce/docs"
 	"github.com/netesh5/go_ecommerce/internal/config"
 	userdb "github.com/netesh5/go_ecommerce/internal/db"
@@ -29,6 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Error connecting to the database:", err)
 	}
+
 	defer db.Db.Close()
 	log.Println("Database connection closed")
 	log.Println("Server stopped")

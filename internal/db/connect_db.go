@@ -38,6 +38,9 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 
 	)`)
 	log.Println("Connected to the database successfully")
+	database = &Postgres{
+		Db: db,
+	}
 	return &Postgres{
 		Db: db,
 	}, nil

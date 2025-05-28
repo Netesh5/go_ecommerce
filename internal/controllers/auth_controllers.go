@@ -102,7 +102,7 @@ func HashPassword(password string) (string, error) {
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
-func login(e echo.Context) error {
+func Login(e echo.Context) error {
 	var user models.User
 	postgres := db.DB()
 	if err := e.Bind(&user); err != nil {

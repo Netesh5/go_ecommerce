@@ -17,7 +17,7 @@ import (
 // @Produce json
 // @Param address body models.Address true "Address information containing Id and UserId"
 // @Success 200 "Address successfully deleted"
-// @Failure 400 {object} errorhandler.ErrorResponse "Invalid input or deletion error"
+// @Failure 400 "Invalid input or deletion error"
 // @Router /user/address [delete]
 func DeleteUserAddress(e echo.Context) error {
 	postgres := db.DB()
