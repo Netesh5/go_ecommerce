@@ -558,7 +558,6 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "required": [
-                "address",
                 "email",
                 "name",
                 "password",

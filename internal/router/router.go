@@ -27,7 +27,19 @@ func RegisterRoutes(e *echo.Echo, routes Routers, apiVersion string) {
 		if !exists {
 			group = e.Group(prefix)
 			versionedGroups[prefix] = group
-			group.Use(middleware.Authentication())
+			publicPaths := []string{"/login", "/signup", "/verify-email"}
+			isPublicPath := func(path string) bool {
+				for _, p := range publicPaths {
+					if p == path {
+						return true
+					}
+				}
+				return false
+			}
+
+			if !isPublicPath(route.Path) {
+				group.Use(middleware.Authentication())
+			}
 		}
 
 		switch route.Method {
