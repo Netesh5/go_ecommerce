@@ -8,6 +8,7 @@ import (
 	_ "github.com/netesh5/go_ecommerce/docs"
 	"github.com/netesh5/go_ecommerce/internal/config"
 	userdb "github.com/netesh5/go_ecommerce/internal/db"
+	"github.com/netesh5/go_ecommerce/internal/middleware"
 	"github.com/netesh5/go_ecommerce/internal/router"
 	"github.com/netesh5/go_ecommerce/internal/utils"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -23,6 +24,7 @@ func main() {
 	e := echo.New()
 
 	e.Validator = utils.NewValidator()
+	e.HTTPErrorHandler = middleware.ErrorHandler
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	db, err := userdb.ConnectDB(config)
