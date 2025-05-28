@@ -9,6 +9,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	contants "github.com/netesh5/go_ecommerce/internal/constant"
+	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 	token "github.com/netesh5/go_ecommerce/internal/tokens"
@@ -25,9 +26,9 @@ import (
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /signup [post]
-func (pc *PostgresController) SignUp(e echo.Context) error {
+func SignUp(e echo.Context) error {
 	var user models.User
-
+	postgres := db.DB()
 	if err := e.Bind(&user); err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
 			err.Error(),
@@ -39,7 +40,7 @@ func (pc *PostgresController) SignUp(e echo.Context) error {
 			err.Error(),
 		))
 	}
-	res, err := pc.DB.GetUserByEmail(user.Email)
+	res, err := postgres.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			err.Error(),
@@ -64,7 +65,7 @@ func (pc *PostgresController) SignUp(e echo.Context) error {
 	user.Address = models.Address{}
 	user.Orders = make([]models.Order, 0)
 
-	_, err = pc.DB.CreateUser(user)
+	_, err = postgres.CreateUser(user)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.ErrorHandler{
 			Message: err.Error(),
@@ -98,8 +99,9 @@ func HashPassword(password string) (string, error) {
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
-func (pc *PostgresController) login(e echo.Context) error {
+func login(e echo.Context) error {
 	var user models.User
+	postgres := db.DB()
 	if err := e.Bind(&user); err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
 			err.Error(),
@@ -112,7 +114,7 @@ func (pc *PostgresController) login(e echo.Context) error {
 		))
 	}
 
-	res, err := pc.DB.GetUserByEmail(user.Email)
+	res, err := postgres.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 			"user doesn't exists",
@@ -134,7 +136,7 @@ func (pc *PostgresController) login(e echo.Context) error {
 
 	res.Token = accessToken
 	res.RefreshToken = refreshToken
-	pc.DB.UpdateUser(res)
+	postgres.UpdateUser(res)
 
 	return e.JSON(http.StatusOK, res)
 

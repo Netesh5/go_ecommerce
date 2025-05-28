@@ -18,11 +18,11 @@ import (
 // @Failure 400 {object} map[string]string
 // @Router /products [get]
 // PostgresController is a local type that wraps db.Postgres
-func (pc *PostgresController) SearchProducts(e echo.Context) error {
-
+func SearchProducts(e echo.Context) error {
+	postgres := db.DB()
 	query := e.QueryParam("query")
 	if query == "" {
-		products, err := pc.DB.GetAllProducts()
+		products, err := postgres.GetAllProducts()
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
@@ -30,13 +30,9 @@ func (pc *PostgresController) SearchProducts(e echo.Context) error {
 
 	}
 
-	products, err := pc.DB.SearchProducts(query)
+	products, err := postgres.SearchProducts(query)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return e.JSON(http.StatusOK, products)
-}
-
-type PostgresController struct {
-	DB *db.Postgres
 }

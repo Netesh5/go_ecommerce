@@ -21,11 +21,11 @@ func main() {
 	e := echo.New()
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
-
+	db, err := userdb.ConnectDB(config)
 	router.RegisterRoutes(e, router.Routes, config.ApiVersion)
 	log.Println("Server is running on port", config.Server.Address)
 	e.Logger.Fatal(e.Start(config.Server.Address))
-	db, err := userdb.ConnectDB(config)
+
 	if err != nil {
 		log.Fatal("Error connecting to the database:", err)
 	}

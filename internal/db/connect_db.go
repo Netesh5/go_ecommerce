@@ -12,6 +12,8 @@ type Postgres struct {
 	Db *sql.DB
 }
 
+var database *Postgres
+
 func ConnectDB(cfg *config.Config) (*Postgres, error) {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		cfg.DbConfig.Host,
@@ -39,6 +41,13 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 	return &Postgres{
 		Db: db,
 	}, nil
+
+}
+
+func DB() *Postgres {
+	return &Postgres{
+		Db: database.Db,
+	}
 
 }
 
