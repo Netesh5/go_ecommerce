@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/netesh5/go_ecommerce/internal/middleware"
 )
 
 type Router struct {
@@ -26,6 +27,7 @@ func RegisterRoutes(e *echo.Echo, routes Routers, apiVersion string) {
 		if !exists {
 			group = e.Group(prefix)
 			versionedGroups[prefix] = group
+			group.Use(middleware.Authentication())
 		}
 
 		switch route.Method {
