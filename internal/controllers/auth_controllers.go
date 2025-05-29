@@ -96,20 +96,13 @@ func HashPassword(password string) (string, error) {
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
 func Login(e echo.Context) error {
-	var user models.User
+	var user models.UserLogin
 	postgres := db.DB()
 	if err := e.Bind(&user); err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
 			err.Error(),
 		))
 	}
-
-	// if err := e.Validate(&user); err != nil {
-	// 	return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
-	// 		err.Error(),
-	// 	))
-	// }
-
 	res, err := postgres.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
@@ -125,7 +118,7 @@ func Login(e echo.Context) error {
 		})
 	}
 
-	accessToken, refreshToken, err := token.TokenGenerator(user.Email, user.Name, user.ID)
+	accessToken, refreshToken, err := token.TokenGenerator(res.Email, res.Name, res.ID)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
@@ -135,14 +128,14 @@ func Login(e echo.Context) error {
 	postgres.UpdateUser(res)
 
 	userResponse := models.UserResponse{
-		ID:           user.ID,
-		Name:         user.Name,
-		Email:        user.Email,
-		Phone:        user.Phone,
-		Token:        user.Token,
-		RefreshToken: user.RefreshToken,
-		CreatedAt:    user.CreatedAt,
-		UpdatedAt:    user.UpdatedAt,
+		ID:           res.ID,
+		Name:         res.Name,
+		Email:        res.Email,
+		Phone:        res.Phone,
+		Token:        res.Token,
+		RefreshToken: res.RefreshToken,
+		CreatedAt:    res.CreatedAt,
+		UpdatedAt:    res.UpdatedAt,
 	}
 
 	return e.JSON(http.StatusOK, userResponse)

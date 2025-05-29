@@ -8,14 +8,14 @@ import (
 )
 
 func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
-	stmt, err := db.Db.Prepare("SELECT id, email FROM users WHERE email= $1")
+	stmt, err := db.Db.Prepare(`SELECT * FROM users WHERE email= $1`)
 	if err != nil {
 		return models.User{}, err
 	}
 	defer stmt.Close()
 
 	var user models.User
-	err = stmt.QueryRow(email).Scan(&user.ID, &user.Email, &user.Phone, &user.Token, &user.RefreshToken, &user.Address, &user.Cart, &user.Orders, &user.CreatedAt, &user.UpdatedAt)
+	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.Address, &user.Cart, &user.Orders, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.User{}, fmt.Errorf("no user found with email %s", email)
