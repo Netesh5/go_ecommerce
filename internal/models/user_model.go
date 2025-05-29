@@ -32,3 +32,8 @@ type Address struct {
 	UpdatedAt string `json:"updated_at"`
 	DeletedAt string `json:"deleted_at"`
 }
+
+type UserLogin struct {
+	Email    string
+	Password string
+}

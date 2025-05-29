@@ -128,6 +128,13 @@ definitions:
     - password
     - phone
     type: object
+  models.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -279,12 +286,12 @@ paths:
       - application/json
       description: User login
       parameters:
-      - description: User object
+      - description: Login object
         in: body
-        name: user
+        name: login
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.UserLogin'
       produces:
       - application/json
       responses:
