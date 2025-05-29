@@ -11,6 +11,7 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/middleware"
 	"github.com/netesh5/go_ecommerce/internal/router"
 	"github.com/netesh5/go_ecommerce/internal/utils"
+	"github.com/sirupsen/logrus"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -22,14 +23,15 @@ import (
 func main() {
 	config := config.LoadConfig()
 	e := echo.New()
-
 	e.Validator = utils.NewValidator()
 	e.HTTPErrorHandler = middleware.ErrorHandler
+
+	e.Use(middleware.LogrusLogger())
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	db, err := userdb.ConnectDB(config)
 	router.RegisterRoutes(e, router.Routes, config.ApiVersion)
-	log.Println("Server is running on port", config.Server.Address)
+	logrus.Info("Server is running on port", config.Server.Address)
 	e.Logger.Fatal(e.Start(config.Server.Address))
 
 	if err != nil {

@@ -40,7 +40,7 @@ func SignUp(e echo.Context) error {
 			err.Error(),
 		))
 	}
-	res, err := postgres.GetUserByEmail(user.Email)
+	res, _ := postgres.GetUserByEmail(user.Email)
 	// if err != nil {
 	// 	return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
 	// 		err.Error(),
@@ -172,7 +172,7 @@ func VerfiyEmail(e echo.Context) error {
 }
 func verfifyPassword(userPassword string, currentPassword string) (bool, error) {
 	if err := bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(currentPassword)); err != nil {
-		return false, fmt.Errorf("Crediential is incorrect")
+		return false, fmt.Errorf("crediential is incorrect")
 	}
 	return true, nil
 }
