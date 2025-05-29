@@ -15,6 +15,7 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 	defer stmt.Close()
 
 	var user models.User
+	var userAddess []models.Address
 	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -23,6 +24,35 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 		}
 		return models.User{}, err
 	}
+
+	addSmt, err := db.Db.Prepare(`SELECT * FROM addresses where id =$1`)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	defer addSmt.Close()
+
+	res, err := addSmt.Query(user.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// For signup checks, this means the email is not registered yet
+			return models.User{}, nil
+		}
+		return models.User{}, err
+	}
+
+	for res.Next() {
+		var addr models.Address
+
+		if err := res.Scan(&addr.Id, &addr.UserId, &addr.Address, &addr.City, &addr.Country, &addr.State, &addr.ZipCode, &addr.CreatedAt, &addr.UpdatedAt); err != nil {
+			return models.User{}, err
+		}
+
+		userAddess = append(userAddess, addr)
+	}
+
+	user.Address = userAddess
+
 	return user, nil
 }
 

@@ -38,7 +38,21 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		refresh_token VARCHAR(255) NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		)`)
+		); 
+
+		
+		CREATE TABLE IF NOT EXISTS addresses (
+		id SERIAL PRIMARY KEY,
+		user_id INT REFERENCES users(id) ON DELETE CASCADE,
+		street TEXT NOT NULL,
+		city TEXT NOT NULL,
+		state TEXT,
+		country TEXT NOT NULL,
+		postal_code TEXT,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+		`)
 	if dbErr != nil {
 		log.Fatalln(dbErr.Error())
 	}

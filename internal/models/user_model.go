@@ -12,6 +12,7 @@ type User struct {
 	Password     string    `json:"password" validate:"required,min=6"`
 	CreatedAt    time.Time `json:"created_at"`
 	Token        string    `json:"token"`
+	Address      []Address `json:"address"`
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
@@ -26,7 +27,6 @@ type Address struct {
 	UserId    int    `json:"user_id"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
-	DeletedAt string `json:"deleted_at"`
 }
 
 type UserLogin struct {
@@ -40,6 +40,7 @@ type UserResponse struct {
 	Email        string    `json:"email"`
 	Phone        string    `json:"phone"`
 	CreatedAt    time.Time `json:"created_at"`
+	Address      []Address `json:"address"`
 	Token        string    `json:"token"`
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
