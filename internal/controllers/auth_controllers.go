@@ -40,11 +40,17 @@ func SignUp(e echo.Context) error {
 			err.Error(),
 		))
 	}
-	res, _ := postgres.GetUserByEmail(user.Email)
-	if res.ID != 0 {
+	res, err := postgres.GetUserByEmail(user.Email)
+	if err == nil && res.ID != 0 {
 		return e.JSON(http.StatusConflict, errorhandler.ErrorHandler{
-			Message: "User already exists",
+			Message: "user already exists",
 		})
+	}
+
+	if err != nil && !errorhandler.IsNoRowsError(err) {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
+			err.Error(),
+		))
 	}
 
 	password, err := HashPassword(user.Password)

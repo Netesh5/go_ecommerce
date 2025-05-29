@@ -158,6 +158,6 @@ func BuyFromCart(e echo.Context) error {
 	}
 	return e.JSON(http.StatusOK, map[string]string{
 		"success": "true",
-		"message": "Products purchased successfully",
+		"message": "products purchased successfully",
 	})
 }

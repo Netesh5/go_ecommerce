@@ -39,15 +39,15 @@ type UserLogin struct {
 }
 
 type UserResponse struct {
-	ID           int
-	Name         string
-	Email        string
-	Phone        string
-	CreatedAt    time.Time
-	Token        string
-	RefreshToken string
-	UpdatedAt    time.Time
-	Address      []Address
-	Cart         []Cart
-	Orders       []Order
+	ID           int       `json:"id"`
+	Name         string    `json:"name"`
+	Email        string    `json:"email"`
+	Phone        string    `json:"phone"`
+	CreatedAt    time.Time `json:"created_at"`
+	Token        string    `json:"token"`
+	RefreshToken string    `json:"refresh_token"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	Address      []Address `json:"address"`
+	Cart         []Cart    `json:"cart"`
+	Orders       []Order   `json:"orders"`
 }
