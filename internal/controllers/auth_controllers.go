@@ -42,9 +42,7 @@ func SignUp(e echo.Context) error {
 	}
 	res, err := postgres.GetUserByEmail(user.Email)
 	if err == nil && res.ID != 0 {
-		return e.JSON(http.StatusConflict, errorhandler.ErrorHandler{
-			Message: "user already exists",
-		})
+		return e.JSON(http.StatusConflict, errorhandler.NewErrorHandler("user already exits"))
 	}
 
 	if err != nil && !errorhandler.IsNoRowsError(err) {
@@ -65,9 +63,9 @@ func SignUp(e echo.Context) error {
 	token, refreshToken, _ := token.TokenGenerator(user.Email, user.Name, user.ID)
 	user.Token = token
 	user.RefreshToken = refreshToken
-	user.Cart = make([]models.Cart, 0)
-	user.Address = make([]models.Address, 0)
-	user.Orders = make([]models.Order, 0)
+	// user.Cart = make([]models.Cart, 0)
+	// user.Address = make([]models.Address, 0)
+	// user.Orders = make([]models.Order, 0)
 
 	_, err = postgres.CreateUser(user)
 	if err != nil {

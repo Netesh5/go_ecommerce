@@ -14,10 +14,6 @@ type User struct {
 	Token        string    `json:"token"`
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
-	DeletedAt    time.Time `json:"deleted_at"`
-	Address      []Address `json:"address"`
-	Cart         []Cart    `json:"cart"`
-	Orders       []Order   `json:"orders"`
 }
 
 type Address struct {
@@ -47,7 +43,4 @@ type UserResponse struct {
 	Token        string    `json:"token"`
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
-	Address      []Address `json:"address"`
-	Cart         []Cart    `json:"cart"`
-	Orders       []Order   `json:"orders"`
 }

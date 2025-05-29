@@ -36,11 +36,9 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		phone VARCHAR(15) NOT NULL,
 		token VARCHAR(255) NOT NULL,
 		refresh_token VARCHAR(255) NOT NULL,
-		address VARCHAR(100),
-		cart VARCHAR(100),
-		orders VARCHAR(100),
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`)
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		)`)
 	if dbErr != nil {
 		log.Fatalln(dbErr.Error())
 	}

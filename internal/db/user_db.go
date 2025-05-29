@@ -8,14 +8,14 @@ import (
 )
 
 func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
-	stmt, err := db.Db.Prepare(`SELECT id, name, email, password, phone, token, refresh_token, address, cart, orders, created_at, updated_at FROM users WHERE email = $1`)
+	stmt, err := db.Db.Prepare(`SELECT * FROM users WHERE email = $1`)
 	if err != nil {
 		return models.User{}, err
 	}
 	defer stmt.Close()
 
 	var user models.User
-	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.Address, &user.Cart, &user.Orders, &user.CreatedAt, &user.UpdatedAt)
+	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// For signup checks, this means the email is not registered yet
@@ -58,13 +58,13 @@ func (db *Postgres) GetUserByID(id int) (models.User, error) {
 }
 
 func (db *Postgres) UpdateUser(user models.User) (models.User, error) {
-	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4,token=$5,refresh_token=$6,phone=$7,address=$8,cart=$9,orders=$10 WHERE id = $11`)
+	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4,token=$5,refresh_token=$6,phone=$7 WHERE id = $8`)
 	if err != nil {
 		return models.User{}, err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.Address, user.Cart, user.Orders, user.ID)
+	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.ID)
 	if err != nil {
 		return models.User{}, err
 	}
