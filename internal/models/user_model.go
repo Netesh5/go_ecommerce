@@ -37,3 +37,17 @@ type UserLogin struct {
 	Email    string
 	Password string
 }
+
+type UserResponse struct {
+	ID           int
+	Name         string
+	Email        string
+	Phone        string
+	CreatedAt    time.Time
+	Token        string
+	RefreshToken string
+	UpdatedAt    time.Time
+	Address      []Address
+	Cart         []Cart
+	Orders       []Order
+}

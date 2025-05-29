@@ -15,7 +15,7 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 	defer stmt.Close()
 
 	var user models.User
-	err = stmt.QueryRow(email).Scan(&user.ID, &user.Email)
+	err = stmt.QueryRow(email).Scan(&user.ID, &user.Email, &user.Phone, &user.Token, &user.RefreshToken, &user.Address, &user.Cart, &user.Orders, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.User{}, fmt.Errorf("no user found with email %s", email)
@@ -27,15 +27,25 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 }
 
 func (db *Postgres) CreateUser(user models.User) (models.User, error) {
-	res, err := db.Db.Exec(`INSERT INTO users (name, email, password,phone,token,refresh_token, created_at, updated_at) VALUES ($1, $2, $3, $4, $5,$6,$7,$8)`, user.Name, user.Email, user.Password, user.Phone, user.Token, user.RefreshToken, user.CreatedAt, user.UpdatedAt)
+	// res, err := db.Db.Exec(`INSERT INTO users (name, email, password,phone,token,refresh_token, created_at, updated_at) VALUES ($1, $2, $3, $4, $5,$6,$7,$8)`, user.Name, user.Email, user.Password, user.Phone, user.Token, user.RefreshToken, user.CreatedAt, user.UpdatedAt)
+	// if err != nil {
+	// 	return models.User{}, err
+	// }
+	// lastInsertID, err := res.LastInsertId()
+	// if err != nil {
+	// 	return models.User{}, err
+	// }
+	// user.ID = int(lastInsertID)
+	// return user, nil
+	err := db.Db.QueryRow(`
+    INSERT INTO users (name, email, password, phone, token, refresh_token, created_at, updated_at)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING id
+`, user.Name, user.Email, user.Password, user.Phone, user.Token, user.RefreshToken, user.CreatedAt, user.UpdatedAt).Scan(&user.ID)
+
 	if err != nil {
 		return models.User{}, err
 	}
-	lastInsertID, err := res.LastInsertId()
-	if err != nil {
-		return models.User{}, err
-	}
-	user.ID = int(lastInsertID)
 	return user, nil
 }
 

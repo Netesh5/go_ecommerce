@@ -104,11 +104,11 @@ func Login(e echo.Context) error {
 		))
 	}
 
-	if err := e.Validate(&user); err != nil {
-		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
-			err.Error(),
-		))
-	}
+	// if err := e.Validate(&user); err != nil {
+	// 	return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(
+	// 		err.Error(),
+	// 	))
+	// }
 
 	res, err := postgres.GetUserByEmail(user.Email)
 	if err != nil {
@@ -134,7 +134,18 @@ func Login(e echo.Context) error {
 	res.RefreshToken = refreshToken
 	postgres.UpdateUser(res)
 
-	return e.JSON(http.StatusOK, res)
+	userResponse := models.UserResponse{
+		ID:           user.ID,
+		Name:         user.Name,
+		Email:        user.Email,
+		Phone:        user.Phone,
+		Token:        user.Token,
+		RefreshToken: user.RefreshToken,
+		CreatedAt:    user.CreatedAt,
+		UpdatedAt:    user.UpdatedAt,
+	}
+
+	return e.JSON(http.StatusOK, userResponse)
 
 }
 
@@ -165,7 +176,7 @@ func VerfiyEmail(e echo.Context) error {
 }
 func verfifyPassword(userPassword string, currentPassword string) (bool, error) {
 	if err := bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(currentPassword)); err != nil {
-		return false, fmt.Errorf("crediential is incorrect")
+		return false, fmt.Errorf("password is incorrect")
 	}
 	return true, nil
 }
