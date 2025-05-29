@@ -28,7 +28,7 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 	if err := db.Ping(); err != nil {
 		log.Fatal("Error pinging the database:", err)
 	}
-	db.Exec(`CREATE TABLE IF NOT EXISTS users (
+	_, dbErr := db.Exec(`CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(100) NOT NULL,
 		email VARCHAR(100) NOT NULL UNIQUE,
@@ -36,14 +36,14 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		phone VARCHAR(15) NOT NULL,
 		token VARCHAR(255) NOT NULL,
 		refresh_token VARCHAR(255) NOT NULL,
-		address VARCHAR(100) NOT NULL,
-		cart VARCHAR(100) NOT NULL,
-		orders VARCHAR(100) NOT NULL,
+		address VARCHAR(100),
+		cart VARCHAR(100),
+		orders VARCHAR(100),
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		CONSTRAINT email_format CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
-
-	)`)
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`)
+	if dbErr != nil {
+		log.Fatalln(dbErr.Error())
+	}
 	log.Println("Connected to the database successfully")
 	database = &Postgres{
 		Db: db,

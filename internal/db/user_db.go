@@ -27,7 +27,7 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 }
 
 func (db *Postgres) CreateUser(user models.User) (models.User, error) {
-	res, err := db.Db.Exec(`INSERT INTO users (name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)`, user.Name, user.Email, user.Password, user.CreatedAt, user.UpdatedAt)
+	res, err := db.Db.Exec(`INSERT INTO users (name, email, password,phone,token,refresh_token, created_at, updated_at) VALUES ($1, $2, $3, $4, $5,$6,$7,$8)`, user.Name, user.Email, user.Password, user.Phone, user.Token, user.RefreshToken, user.CreatedAt, user.UpdatedAt)
 	if err != nil {
 		return models.User{}, err
 	}
