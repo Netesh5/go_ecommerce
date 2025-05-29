@@ -17,8 +17,6 @@ definitions:
         type: string
       created_at:
         type: string
-      deleted_at:
-        type: string
       id:
         type: integer
       state:
@@ -59,81 +57,31 @@ definitions:
     - quantity
     - user_id
     type: object
-  models.Order:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      order_status:
-        type: string
-      product_id:
-        type: integer
-      quantity:
-        type: integer
-      total_price:
-        type: number
-      updated_at:
-        type: string
-      user_id:
-        type: integer
-    required:
-    - id
-    - product_id
-    - quantity
-    - user_id
-    type: object
-  models.User:
-    properties:
-      address:
-        items:
-          $ref: '#/definitions/models.Address'
-        type: array
-      cart:
-        items:
-          $ref: '#/definitions/models.Cart'
-        type: array
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      email:
-        type: string
-      id:
-        type: integer
-      name:
-        maxLength: 30
-        minLength: 2
-        type: string
-      orders:
-        items:
-          $ref: '#/definitions/models.Order'
-        type: array
-      password:
-        minLength: 6
-        type: string
-      phone:
-        type: string
-      refresh_token:
-        type: string
-      token:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - email
-    - name
-    - password
-    - phone
-    type: object
   models.UserLogin:
     properties:
       email:
         type: string
       password:
         type: string
+    type: object
+  models.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        maxLength: 30
+        minLength: 2
+        type: string
+      password:
+        minLength: 6
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - phone
     type: object
 host: localhost:8080
 info:
@@ -347,21 +295,27 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.UserRequest'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Returns success message
           schema:
             additionalProperties: true
             type: object
         "400":
-          description: Bad Request
+          description: Validation error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
       summary: singup
       tags:
       - auth

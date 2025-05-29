@@ -22,9 +22,11 @@ import (
 // @Tags auth
 // @Accept  json
 // @Produce  json
-// @Param user body models.User true "User object"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
+// @Param user body models.UserRequest true "User object"
+// @Success 201 {object} map[string]interface{} "Returns success message"
+// @Failure 400 {object} errorhandler.ErrorHandler "Validation error"
+// @Failure 409 {object} errorhandler.ErrorHandler "User already exists"
+// @Failure 500 {object} errorhandler.ErrorHandler "Internal server error"
 // @Router /signup [post]
 func SignUp(e echo.Context) error {
 	var user models.User

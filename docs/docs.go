@@ -327,25 +327,34 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserRequest"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Returns success message",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Validation error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                        }
+                    },
+                    "409": {
+                        "description": "User already exists",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
                         }
                     }
                 }
@@ -455,9 +464,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
@@ -517,45 +523,18 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Order": {
+        "models.UserLogin": {
             "type": "object",
-            "required": [
-                "id",
-                "product_id",
-                "quantity",
-                "user_id"
-            ],
             "properties": {
-                "created_at": {
+                "email": {
                     "type": "string"
                 },
-                "deleted_at": {
+                "password": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "order_status": {
-                    "type": "string"
-                },
-                "product_id": {
-                    "type": "integer"
-                },
-                "quantity": {
-                    "type": "integer"
-                },
-                "total_price": {
-                    "type": "number"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
-        "models.User": {
+        "models.UserRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -564,66 +543,19 @@ const docTemplate = `{
                 "phone"
             ],
             "properties": {
-                "address": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Address"
-                    }
-                },
-                "cart": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Cart"
-                    }
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "name": {
                     "type": "string",
                     "maxLength": 30,
                     "minLength": 2
                 },
-                "orders": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Order"
-                    }
-                },
                 "password": {
                     "type": "string",
                     "minLength": 6
                 },
                 "phone": {
-                    "type": "string"
-                },
-                "refresh_token": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.UserLogin": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
                     "type": "string"
                 }
             }
