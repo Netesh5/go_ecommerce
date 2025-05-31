@@ -4,7 +4,7 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
-func (db *Postgres) AddProductIntoCart(cart models.Cart, product models.Prouduct, user models.User) error {
+func (db *Postgres) AddProductIntoCart(cart models.Cart, product models.Product, user models.User) error {
 	stmt, err := db.Db.Prepare(`CREATE TABLE IF NOT EXISTS cart(
 	iD        SERIAL  PRIMARY KEY,
 	user_id    int   NOT NULL,
@@ -75,14 +75,14 @@ func (db *Postgres) GetItemFromCart(userID int) ([]models.Cart, error) {
 
 }
 
-func (db *Postgres) SearchProducts(query string) ([]models.Prouduct, error) {
+func (db *Postgres) SearchProducts(query string) ([]models.Product, error) {
 	stmt, err := db.Db.Prepare(`SELECT * FROM products WHERE name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%'`)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
-	var products []models.Prouduct
+	var products []models.Product
 	res, err := stmt.Query(query)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (db *Postgres) SearchProducts(query string) ([]models.Prouduct, error) {
 	defer res.Close()
 
 	for res.Next() {
-		var product models.Prouduct
+		var product models.Product
 		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt, &product.DeletedAt); err != nil {
 			return nil, err
 		}

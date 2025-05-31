@@ -10,7 +10,7 @@ import (
 )
 
 // SearchProduct godoc
-// @Summary Search products
+// @Summary Get Products / Search products
 // @Description Search products by query (optional)
 // @Tags products
 // @Accept  json
