@@ -67,3 +67,16 @@ func GetAddressByID(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, address)
 }
+
+func GetAddresses(e echo.Context) error {
+	userId := e.Get("user").(models.User)
+
+	db := db.DB()
+
+	addresses, err := db.GetUserAddresses(userId.ID)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return e.JSON(http.StatusOK, addresses)
+
+}

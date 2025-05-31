@@ -1,6 +1,8 @@
 package db
 
 import (
+	"database/sql"
+
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
@@ -31,4 +33,33 @@ func (db *Postgres) GetUserAddress(id int, userId int) (models.Address, error) {
 	}
 	return address, nil
 
+}
+
+func (db *Postgres) GetUserAddresses(userId int) ([]models.Address, error) {
+	var addresses []models.Address
+
+	stmt, err := db.Db.Prepare(`SELECT * from address WHERE user_id=$1`)
+	if err != nil {
+		return []models.Address{}, nil
+	}
+
+	res, err := stmt.Query(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return []models.Address{}, nil
+		}
+		return []models.Address{}, err
+	}
+
+	for res.Next() {
+		var address models.Address
+		err := res.Scan(&address.Id, &address.Address, &address.City, &address.State, &address.Country, &address.ZipCode, &address.UserId, &address.CreatedAt, &address.UpdatedAt)
+		if err != nil {
+			return []models.Address{}, err
+		}
+
+		addresses = append(addresses, address)
+	}
+
+	return addresses, nil
 }
