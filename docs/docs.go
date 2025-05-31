@@ -57,6 +57,36 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Removes a specified address associated with a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Delete a user's address",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Address information containing address Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address successfully deleted"
+                    },
+                    "400": {
+                        "description": "Invalid input or deletion error"
+                    }
+                }
             }
         },
         "/addresses": {
@@ -359,7 +389,7 @@ const docTemplate = `{
                 "tags": [
                     "products"
                 ],
-                "summary": "Search products",
+                "summary": "Get Products / Search products",
                 "parameters": [
                     {
                         "type": "string",
@@ -383,6 +413,50 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "type": "string"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "description": "Retrieves a product from the database based on the provided ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get product by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Invalid or missing product ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errorhandler.ErrorHandler"
                         }
                     }
                 }
@@ -437,38 +511,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/errorhandler.ErrorHandler"
                         }
-                    }
-                }
-            }
-        },
-        "/user/{id}": {
-            "delete": {
-                "description": "Removes a specified address associated with a user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "addresses"
-                ],
-                "summary": "Delete a user's address",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Address information containing address Id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Address successfully deleted"
-                    },
-                    "400": {
-                        "description": "Invalid input or deletion error"
                     }
                 }
             }
@@ -599,6 +641,41 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Product": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "stock": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },

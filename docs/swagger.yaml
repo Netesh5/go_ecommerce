@@ -57,6 +57,29 @@ definitions:
     - quantity
     - user_id
     type: object
+  models.Product:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   models.UserLogin:
     properties:
       email:
@@ -91,6 +114,26 @@ info:
   version: "1.0"
 paths:
   /address/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a specified address associated with a user
+      parameters:
+      - description: Address information containing address Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Address successfully deleted
+        "400":
+          description: Invalid input or deletion error
+      summary: Delete a user's address
+      tags:
+      - addresses
     get:
       consumes:
       - application/json
@@ -334,7 +377,36 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Search products
+      summary: Get Products / Search products
+      tags:
+      - products
+  /products/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a product from the database based on the provided ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad request - Invalid or missing product ID
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+      summary: Get product by ID
       tags:
       - products
   /signup:
@@ -372,27 +444,6 @@ paths:
       summary: singup
       tags:
       - auth
-  /user/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Removes a specified address associated with a user
-      parameters:
-      - description: Address information containing address Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Address successfully deleted
-        "400":
-          description: Invalid input or deletion error
-      summary: Delete a user's address
-      tags:
-      - addresses
   /verify-email:
     get:
       consumes:

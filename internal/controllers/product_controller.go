@@ -16,7 +16,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param query query string false "query string for searching products"
-// @Success 200 {object} map[string]interface{}
+// @Success 200 {object} models.Product
 // @Failure 400 {object} map[string]string
 // @Router /products [get]
 // PostgresController is a local type that wraps db.Postgres
@@ -48,7 +48,7 @@ func SearchProducts(e echo.Context) error {
 // @Param id path int true "Product ID"
 // @Success 200 {object} models.Product
 // @Failure 400 {string} string "Bad request - Invalid or missing product ID"
-// @Failure 500 {object} errorhandler.ErrorResponse
+// @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /products/{id} [get]
 func GetProductByID(e echo.Context) error {
 	productParam := e.Param("id")
