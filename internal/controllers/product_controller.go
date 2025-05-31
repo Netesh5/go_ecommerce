@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/netesh5/go_ecommerce/internal/db"
+	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 )
 
 // SearchProduct godoc
@@ -24,7 +26,7 @@ func SearchProducts(e echo.Context) error {
 	if query == "" {
 		products, err := postgres.GetAllProducts()
 		if err != nil {
-			return e.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 		}
 		return e.JSON(http.StatusOK, products)
 
@@ -32,7 +34,36 @@ func SearchProducts(e echo.Context) error {
 
 	products, err := postgres.SearchProducts(query)
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
 	return e.JSON(http.StatusOK, products)
+}
+
+// GetProductByID godoc
+// @Summary Get product by ID
+// @Description Retrieves a product from the database based on the provided ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} models.Product
+// @Failure 400 {string} string "Bad request - Invalid or missing product ID"
+// @Failure 500 {object} errorhandler.ErrorResponse
+// @Router /products/{id} [get]
+func GetProductByID(e echo.Context) error {
+	productParam := e.Param("id")
+	if productParam == "" {
+		return e.JSON(http.StatusBadRequest, "product id is required")
+	}
+	productId, err := strconv.Atoi(productParam)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, "product id is invalid")
+	}
+
+	db := db.DB()
+	product, err := db.GetProductByID(productId)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+	}
+	return e.JSON(http.StatusOK, product)
 }

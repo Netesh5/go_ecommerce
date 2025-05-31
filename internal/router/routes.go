@@ -67,4 +67,23 @@ var Routes = Routers{
 		Path:       "/cart",
 		HandleFunc: controllers.GetItemFromCart,
 	},
+
+	{
+		Name:       "DeleteUserAddress",
+		Method:     http.MethodDelete,
+		Path:       "/address/:id",
+		HandleFunc: controllers.DeleteUserAddress,
+	},
+	{
+		Name:       "GetUserAddressById",
+		Method:     http.MethodGet,
+		Path:       "/address/:id",
+		HandleFunc: controllers.GetAddressByID,
+	},
+	{
+		Name:       "GetUserAddresses",
+		Method:     http.MethodGet,
+		Path:       "/addresses",
+		HandleFunc: controllers.GetAddresses,
+	},
 }
