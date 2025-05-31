@@ -90,6 +90,59 @@ info:
   title: Ecommerce API Swagger
   version: "1.0"
 paths:
+  /address/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a specific address associated with the authenticated
+        user
+      parameters:
+      - description: Address ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Address details
+          schema:
+            $ref: '#/definitions/models.Address'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/errorhandler.ErrorHandler'
+        "404":
+          description: No data found
+          schema:
+            type: string
+      summary: Get a user's address
+      tags:
+      - addresses
+  /addresses:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all addresses for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of user addresses
+          schema:
+            items:
+              $ref: '#/definitions/models.Address'
+            type: array
+        "500":
+          description: Error message
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get user addresses
+      tags:
+      - addresses
   /buy-cart:
     get:
       consumes:
@@ -319,18 +372,17 @@ paths:
       summary: singup
       tags:
       - auth
-  /user/address:
+  /user/{id}:
     delete:
       consumes:
       - application/json
       description: Removes a specified address associated with a user
       parameters:
-      - description: Address information containing Id and UserId
-        in: body
-        name: address
+      - description: Address information containing address Id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Address'
+        type: integer
       produces:
       - application/json
       responses:

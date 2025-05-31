@@ -16,10 +16,10 @@ import (
 // @Tags addresses
 // @Accept json
 // @Produce json
-// @Param address path id true "Address information containing address Id"
+// @Param id path int true "Address information containing address Id"
 // @Success 200 "Address successfully deleted"
 // @Failure 400 "Invalid input or deletion error"
-// @Router /user/{id} [delete]
+// @Router /address/{id} [delete]
 func DeleteUserAddress(e echo.Context) error {
 	postgres := db.DB()
 	var address models.Address
@@ -39,9 +39,9 @@ func DeleteUserAddress(e echo.Context) error {
 // @Tags addresses
 // @Accept json
 // @Produce json
-// @Param id path string true "Address ID"
+// @Param id path int true "Address ID"
 // @Success 200 {object} models.Address "Address details"
-// @Failure 400 {object} errorhandler.ErrorResponse "Bad request"
+// @Failure 400 {object} errorhandler.ErrorHandler "Bad request"
 // @Failure 404 {string} string "No data found"
 // @Router /address/{id} [get]
 func GetAddressByID(e echo.Context) error {
