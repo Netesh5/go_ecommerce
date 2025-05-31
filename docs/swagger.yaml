@@ -369,8 +369,9 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
         "400":
           description: Bad Request
           schema:

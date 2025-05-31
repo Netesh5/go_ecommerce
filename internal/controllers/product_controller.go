@@ -16,7 +16,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param query query string false "query string for searching products"
-// @Success 200 {object} models.Product
+// @Success 200 {array} models.Product
 // @Failure 400 {object} map[string]string
 // @Router /products [get]
 // PostgresController is a local type that wraps db.Postgres
