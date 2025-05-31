@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
+	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
@@ -30,7 +31,7 @@ func DeleteUserAddress(e echo.Context) error {
 	if err := postgres.DeleteAddress(address.Id, address.UserId); err != nil {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(err.Error()))
 	}
-	return nil
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("address deleted successfully"))
 }
 
 // GetAddress godoc
@@ -65,7 +66,7 @@ func GetAddressByID(e echo.Context) error {
 		return e.JSON(http.StatusNotFound, "no data found")
 	}
 
-	return e.JSON(http.StatusOK, address)
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(address, ""))
 }
 
 // GetAddresses godoc
@@ -87,6 +88,6 @@ func GetAddresses(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, addresses)
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(addresses, ""))
 
 }

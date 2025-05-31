@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
+	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
 )
 
 // SearchProduct godoc
@@ -36,7 +37,7 @@ func SearchProducts(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusOK, products)
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(products, ""))
 }
 
 // GetProductByID godoc
@@ -65,5 +66,5 @@ func GetProductByID(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusOK, product)
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(product, ""))
 }

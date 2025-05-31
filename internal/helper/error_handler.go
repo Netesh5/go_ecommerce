@@ -1,4 +1,4 @@
-package errorhandler
+package responsehandler
 
 type ErrorHandler struct {
 	Error   bool   `json:"error"`

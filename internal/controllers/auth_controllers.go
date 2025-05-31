@@ -11,6 +11,7 @@ import (
 	contants "github.com/netesh5/go_ecommerce/internal/constant"
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
+	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 	token "github.com/netesh5/go_ecommerce/internal/tokens"
 	"golang.org/x/crypto/bcrypt"
@@ -75,10 +76,7 @@ func SignUp(e echo.Context) error {
 
 	}
 
-	return e.JSON(http.StatusCreated, map[string]interface{}{
-		"sucess":  true,
-		"message": "User created successfully",
-	})
+	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("user created successfully"))
 }
 
 func HashPassword(password string) (string, error) {
@@ -150,7 +148,7 @@ func Login(e echo.Context) error {
 		UpdatedAt:    res.UpdatedAt,
 	}
 
-	return e.JSON(http.StatusOK, userResponse)
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(userResponse, ""))
 
 }
 

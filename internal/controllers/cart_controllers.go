@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
+	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
@@ -94,9 +95,7 @@ func RemoveItemFromCart(e echo.Context) error {
 			err.Error(),
 		))
 	}
-	return e.JSON(http.StatusOK, map[string]string{
-		"message": "Product removed from cart successfully",
-	})
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("product removed from cart successfully"))
 }
 
 // GetItemFromCart godoc
@@ -122,7 +121,7 @@ func GetItemFromCart(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusOK, carts)
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(carts, ""))
 }
 
 // BuyFromCart godoc
@@ -156,8 +155,5 @@ func BuyFromCart(e echo.Context) error {
 		}
 
 	}
-	return e.JSON(http.StatusOK, map[string]string{
-		"success": "true",
-		"message": "products purchased successfully",
-	})
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("products purchased successfully"))
 }

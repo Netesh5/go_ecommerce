@@ -36,24 +36,27 @@ func (db *Postgres) GetProductByID(id int) (models.Product, error) {
 func (db *Postgres) GetAllProducts() ([]models.Product, error) {
 	stmt, err := db.Db.Prepare(`SELECT * FROM products`)
 	if err != nil {
-		return []models.Product{}, err
+		return nil, err
 	}
 
 	defer stmt.Close()
-	var products []models.Product
+	products := []models.Product{}
 	res, err := stmt.Query()
+
 	if err != nil {
-		return []models.Product{}, err
+		return nil, err
 	}
+	defer res.Close()
+
 	for res.Next() {
 		var product models.Product
 		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt); err != nil {
-			return []models.Product{}, err
+			return nil, err
 		}
 		products = append(products, product)
 	}
 	if err := res.Err(); err != nil {
-		return []models.Product{}, err
+		return nil, err
 	}
 	return products, nil
 
