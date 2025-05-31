@@ -1,10 +1,12 @@
 package token
 
 import (
+	"errors"
 	"os"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
 type SignDetails struct {
@@ -121,3 +123,41 @@ func TokenValidator(tokenString string) (claims *SignDetails, message string) {
 // return token, refreshToken, nil
 
 //}
+
+func TokenParser(tokenString string) (models.User, error) {
+	claims := &SignDetails{}
+
+	// Parse the token with claims
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("SECRET_KEY")), nil
+	})
+	if err != nil {
+		return models.User{}, err
+	}
+
+	// Validate token and claims
+	if !token.Valid {
+		return models.User{}, errors.New("invalid token")
+	}
+
+	// Now claims is populated and can be used
+	return models.User{
+		ID:    claims.ID,
+		Name:  claims.Name,
+		Email: claims.Email,
+	}, nil
+}
+
+// func ExtractTokenFromHeader(c echo.Context) (string, error) {
+// 	authHeader := c.Request().Header.Get("Authorization")
+// 	if authHeader == "" {
+// 		return "", fmt.Errorf("no authorization header found")
+// 	}
+// 	splitToken := strings.Split(authHeader, " ")
+// 	if len(splitToken) != 2 || strings.ToLower(splitToken[0]) != "bearer" {
+// 		return "", fmt.Errorf("no authorization header found")
+// 	}
+
+// 	return splitToken[1], nil
+
+// }

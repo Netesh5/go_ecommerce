@@ -7,4 +7,5 @@ import (
 type IAddress interface {
 	UpdateUserAddress(models.Address) error
 	DeleteUserAddress(id int) error
+	GetUserAddress(id int) (models.Address, error)
 }

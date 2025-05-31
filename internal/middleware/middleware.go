@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
+	"github.com/netesh5/go_ecommerce/internal/models"
 	token "github.com/netesh5/go_ecommerce/internal/tokens"
 )
 
@@ -20,8 +21,16 @@ func Authentication() echo.MiddlewareFunc {
 			if err != "" {
 				return e.JSON(http.StatusUnauthorized, errorhandler.NewErrorHandler(err))
 			}
-			e.Set("email", claims.Email)
-			e.Set("id", claims.ID)
+			// e.Set("email", claims.Email)
+			// e.Set("id", claims.ID)
+			// e.Set("name", claims.Name)
+
+			user := models.User{
+				ID:    claims.ID,
+				Name:  claims.Name,
+				Email: claims.Email,
+			}
+			e.Set("user", user)
 			return next(e)
 		}
 	}
