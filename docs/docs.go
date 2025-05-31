@@ -39,15 +39,27 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Address details",
+                        "description": "User Address",
                         "schema": {
-                            "$ref": "#/definitions/models.Address"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Address"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "404": {
@@ -81,7 +93,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Address successfully deleted"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
                     },
                     "400": {
                         "description": "Invalid input or deletion error"
@@ -109,12 +124,24 @@ const docTemplate = `{
                 "summary": "Get user addresses",
                 "responses": {
                     "200": {
-                        "description": "List of user addresses",
+                        "description": "User Address",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Address"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.Address"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "500": {
@@ -152,22 +179,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Cart"
-                            }
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -197,24 +221,36 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "List of Products in cart",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Cart"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.Cart"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -260,22 +296,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -312,22 +345,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -359,10 +389,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "User Response",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.User"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -400,21 +441,30 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "List of products",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Product"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.Product"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -444,9 +494,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Product",
                         "schema": {
-                            "$ref": "#/definitions/models.Product"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Product"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -458,7 +520,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -490,28 +552,27 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Returns success message",
+                        "description": "Created",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Validation error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "409": {
                         "description": "User already exists",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorhandler.ErrorHandler"
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
                     }
                 }
@@ -561,17 +622,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "errorhandler.ErrorHandler": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Address": {
             "type": "object",
             "properties": {
@@ -655,9 +705,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -675,6 +722,56 @@ const docTemplate = `{
                 },
                 "stock": {
                     "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "phone"
+            ],
+            "properties": {
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_verified": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "minLength": 2
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
@@ -715,6 +812,29 @@ const docTemplate = `{
                 },
                 "phone": {
                     "type": "string"
+                }
+            }
+        },
+        "responsehandler.ErrorHandler": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "responsehandler.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         }

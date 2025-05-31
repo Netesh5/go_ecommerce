@@ -20,7 +20,7 @@ import (
 // @Param product_id path int true "Product ID"
 // @Param user_id path int true "User ID"
 // @Param cart body models.Cart true "Cart object"
-// @Success 200 {object} map[string]string
+// @Success 200 {object} responsehandler.SuccessResponse
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [post]
@@ -53,9 +53,7 @@ func AddItemToCart(e echo.Context) error {
 			err.Error(),
 		))
 	}
-	return e.JSON(http.StatusOK, map[string]string{
-		"message": "Product added to cart successfully",
-	})
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("product added to cart successfully"))
 
 }
 
@@ -67,7 +65,7 @@ func AddItemToCart(e echo.Context) error {
 // @Produce  json
 // @Param product_id path int true "Product ID"
 // @Param user_id path int true "User ID"
-// @Success 200 {object} map[string]string
+// @Success 200 {object} responsehandler.SuccessResponse
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [delete]
@@ -105,7 +103,7 @@ func RemoveItemFromCart(e echo.Context) error {
 // @Accept  json
 // @Produce  json
 // @Param user_id path int true "User ID"
-// @Success 200 {array} models.Cart
+// @Success 200 {object} responsehandler.SuccessResponse{data=[]models.Cart} "List of Products in cart"
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [get]
@@ -131,7 +129,7 @@ func GetItemFromCart(e echo.Context) error {
 // @Accept  json
 // @Produce  json
 // @Param user_id query int true "User ID"
-// @Success 200 {array} models.Cart
+// @Success 200 {object} responsehandler.SuccessResponse
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /buy-cart [get]

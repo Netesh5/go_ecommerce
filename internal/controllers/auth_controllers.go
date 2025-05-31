@@ -24,7 +24,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param user body models.UserRequest true "User object"
-// @Success 201 {object} map[string]interface{} "Returns success message"
+// @Success 201 {object} responsehandler.SuccessResponse
 // @Failure 400 {object} errorhandler.ErrorHandler "Validation error"
 // @Failure 409 {object} errorhandler.ErrorHandler "User already exists"
 // @Failure 500 {object} errorhandler.ErrorHandler "Internal server error"
@@ -96,7 +96,7 @@ func HashPassword(password string) (string, error) {
 // @Accept  json
 // @Produce  json
 // @Param login body models.UserLogin true "Login object"
-// @Success 200 {object} map[string]interface{}
+// @Success 200 {object} responsehandler.SuccessResponse{data=models.User} "User Response"
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
 func Login(e echo.Context) error {

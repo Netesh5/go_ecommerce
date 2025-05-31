@@ -18,7 +18,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param id path int true "Address information containing address Id"
-// @Success 200 "Address successfully deleted"
+// @Success 200 {object} responsehandler.SuccessResponse
 // @Failure 400 "Invalid input or deletion error"
 // @Router /address/{id} [delete]
 func DeleteUserAddress(e echo.Context) error {
@@ -41,7 +41,7 @@ func DeleteUserAddress(e echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path int true "Address ID"
-// @Success 200 {object} models.Address "Address details"
+// @Success 200 {object} responsehandler.SuccessResponse{data=models.Address} "User Address"
 // @Failure 400 {object} errorhandler.ErrorHandler "Bad request"
 // @Failure 404 {string} string "No data found"
 // @Router /address/{id} [get]
@@ -76,7 +76,7 @@ func GetAddressByID(e echo.Context) error {
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
-// @Success 200 {array} models.Address "List of user addresses"
+// @Success 200 {object} responsehandler.SuccessResponse{data=[]models.Address} "User Address"
 // @Failure 500 {string} string "Error message"
 // @Router /addresses [get]
 func GetAddresses(e echo.Context) error {

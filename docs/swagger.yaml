@@ -1,12 +1,5 @@
 basePath: /api/v1
 definitions:
-  errorhandler.ErrorHandler:
-    properties:
-      error:
-        type: boolean
-      message:
-        type: string
-    type: object
   models.Address:
     properties:
       address:
@@ -63,8 +56,6 @@ definitions:
         type: string
       created_at:
         type: string
-      deleted_at:
-        type: string
       description:
         type: string
       id:
@@ -79,6 +70,41 @@ definitions:
         type: integer
       updated_at:
         type: string
+    type: object
+  models.User:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      is_verified:
+        type: boolean
+      name:
+        maxLength: 30
+        minLength: 2
+        type: string
+      password:
+        minLength: 6
+        type: string
+      phone:
+        type: string
+      refresh_token:
+        type: string
+      token:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - phone
     type: object
   models.UserLogin:
     properties:
@@ -106,6 +132,21 @@ definitions:
     - password
     - phone
     type: object
+  responsehandler.ErrorHandler:
+    properties:
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+  responsehandler.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -128,7 +169,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Address successfully deleted
+          description: OK
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
         "400":
           description: Invalid input or deletion error
       summary: Delete a user's address
@@ -149,13 +192,18 @@ paths:
       - application/json
       responses:
         "200":
-          description: Address details
+          description: User Address
           schema:
-            $ref: '#/definitions/models.Address'
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Address'
+              type: object
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "404":
           description: No data found
           schema:
@@ -172,11 +220,16 @@ paths:
       - application/json
       responses:
         "200":
-          description: List of user addresses
+          description: User Address
           schema:
-            items:
-              $ref: '#/definitions/models.Address'
-            type: array
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Address'
+                  type: array
+              type: object
         "500":
           description: Error message
           schema:
@@ -203,17 +256,15 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Cart'
-            type: array
+            $ref: '#/definitions/responsehandler.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: Get items from cart
       tags:
       - cart
@@ -239,17 +290,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/responsehandler.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: Remove product from cart
       tags:
       - cart
@@ -267,19 +316,24 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: List of Products in cart
           schema:
-            items:
-              $ref: '#/definitions/models.Cart'
-            type: array
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Cart'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: Get items from cart
       tags:
       - cart
@@ -310,17 +364,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/responsehandler.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: Add product to cart
       tags:
       - cart
@@ -340,10 +392,14 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: User Response
           schema:
-            additionalProperties: true
-            type: object
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -367,17 +423,20 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: List of products
           schema:
-            items:
-              $ref: '#/definitions/models.Product'
-            type: array
-        "400":
-          description: Bad Request
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Product'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: Get Products / Search products
       tags:
       - products
@@ -396,9 +455,14 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Product
           schema:
-            $ref: '#/definitions/models.Product'
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Product'
+              type: object
         "400":
           description: Bad request - Invalid or missing product ID
           schema:
@@ -406,7 +470,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: Get product by ID
       tags:
       - products
@@ -426,22 +490,21 @@ paths:
       - application/json
       responses:
         "201":
-          description: Returns success message
+          description: Created
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/responsehandler.SuccessResponse'
         "400":
           description: Validation error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "409":
           description: User already exists
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/errorhandler.ErrorHandler'
+            $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: singup
       tags:
       - auth
