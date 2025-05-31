@@ -36,6 +36,7 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		phone VARCHAR(15) NOT NULL,
 		token VARCHAR(255) NOT NULL,
 		refresh_token VARCHAR(255) NOT NULL,
+		is_verified BOOLEAN DEFAULT FALSE,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		); 

@@ -10,10 +10,11 @@ type User struct {
 	Email        string    `json:"email" validate:"required,email"`
 	Phone        string    `json:"phone" validate:"required"`
 	Password     string    `json:"password" validate:"required,min=6"`
-	CreatedAt    time.Time `json:"created_at"`
+	Verfiy       bool      `json:"is_verified"`
 	Token        string    `json:"token"`
 	Address      []Address `json:"address"`
 	RefreshToken string    `json:"refresh_token"`
+	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
@@ -42,6 +43,7 @@ type UserResponse struct {
 	CreatedAt    time.Time `json:"created_at"`
 	Address      []Address `json:"address"`
 	Token        string    `json:"token"`
+	Verfiy       bool      `json:"is_verified"`
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }

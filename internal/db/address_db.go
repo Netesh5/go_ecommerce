@@ -7,7 +7,7 @@ import (
 )
 
 func (db *Postgres) DeleteAddress(id int, userId int) error {
-	stmt, err := db.Db.Prepare(`DELETE FROM address WHERE id=$1 AND user_id=$2`)
+	stmt, err := db.Db.Prepare(`DELETE FROM addresses WHERE id=$1 AND user_id=$2`)
 	if err != nil {
 		return err
 	}
@@ -23,7 +23,7 @@ func (db *Postgres) DeleteAddress(id int, userId int) error {
 func (db *Postgres) GetUserAddress(id int, userId int) (models.Address, error) {
 
 	var address models.Address
-	stmt, dbError := db.Db.Prepare(`SELECT * FROM address where id=$1 AND user_id=$2`)
+	stmt, dbError := db.Db.Prepare(`SELECT * FROM addresses where id=$1 AND user_id=$2`)
 	if dbError != nil {
 		return models.Address{}, dbError
 	}
@@ -38,7 +38,7 @@ func (db *Postgres) GetUserAddress(id int, userId int) (models.Address, error) {
 func (db *Postgres) GetUserAddresses(userId int) ([]models.Address, error) {
 	var addresses []models.Address
 
-	stmt, err := db.Db.Prepare(`SELECT * from address WHERE user_id=$1`)
+	stmt, err := db.Db.Prepare(`SELECT * from addresses WHERE user_id=$1`)
 	if err != nil {
 		return []models.Address{}, nil
 	}

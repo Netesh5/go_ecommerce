@@ -16,7 +16,7 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 
 	var user models.User
 	var userAddess []models.Address
-	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.CreatedAt, &user.UpdatedAt)
+	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.Verfiy, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// For signup checks, this means the email is not registered yet
@@ -58,10 +58,10 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 
 func (db *Postgres) CreateUser(user models.User) (models.User, error) {
 	err := db.Db.QueryRow(`
-    INSERT INTO users (name, email, password, phone, token, refresh_token, created_at, updated_at)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    INSERT INTO users (name, email, password, phone, token, refresh_token,is_verified, created_at, updated_at)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9)
     RETURNING id
-`, user.Name, user.Email, user.Password, user.Phone, user.Token, user.RefreshToken, user.CreatedAt, user.UpdatedAt).Scan(&user.ID)
+`, user.Name, user.Email, user.Password, user.Phone, user.Token, user.RefreshToken, user.Verfiy, user.CreatedAt, user.UpdatedAt).Scan(&user.ID)
 
 	if err != nil {
 		return models.User{}, err

@@ -109,6 +109,12 @@ func Login(e echo.Context) error {
 			err.Error(),
 		))
 	}
+
+	err := e.Validate(&user)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(err.Error()))
+	}
+
 	res, err := postgres.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(
