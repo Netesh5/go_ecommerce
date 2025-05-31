@@ -12,7 +12,11 @@ import (
 func Authentication() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(e echo.Context) error {
-			clientToken := e.Request().Header.Get("token")
+			authHeader := e.Request().Header.Get("Authorization")
+			clientToken := ""
+			if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+				clientToken = authHeader[7:]
+			}
 			if clientToken == "" {
 				return e.JSON(http.StatusUnauthorized, errorhandler.NewErrorHandler("No authorization header found"))
 			}
