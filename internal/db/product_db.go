@@ -23,8 +23,7 @@ func (db *Postgres) GetProductByID(id int) (models.Product, error) {
 		&product.Stock,
 		&product.Category,
 		&product.CreatedAt,
-		&product.UpdatedAt,
-		&product.DeletedAt)
+		&product.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.Product{}, fmt.Errorf("no product found with")
@@ -48,7 +47,7 @@ func (db *Postgres) GetAllProducts() ([]models.Product, error) {
 	}
 	for res.Next() {
 		var product models.Product
-		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt, &product.DeletedAt); err != nil {
+		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt); err != nil {
 			return []models.Product{}, err
 		}
 		products = append(products, product)

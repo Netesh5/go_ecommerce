@@ -5,28 +5,27 @@ import (
 )
 
 func (db *Postgres) AddProductIntoCart(cart models.Cart, product models.Product, user models.User) error {
-	stmt, err := db.Db.Prepare(`CREATE TABLE IF NOT EXISTS cart(
-	iD        SERIAL  PRIMARY KEY,
-	user_id    int   NOT NULL,
-	product_id int   NOT NULL,
-	quantity  int   NOT NULL,
-	price     NUMERIC NOT NULL,
-	total     NUMERIC,
-	checkout  bool  DEFAULT false,
-	createdAt date DEFAULT current_date,
-	updatedAt date DEFAULT current_date,
-	deletedAt date DEFAULT current_date,
-	FOREGIN KEY(user_id) REFERENCES users(id)
-	FOREGIN KEY(product_id) REFERENCES products(id)
-	)`)
-	if err != nil {
-		return err
-	}
+	// stmt, err := db.Db.Prepare(`CREATE TABLE IF NOT EXISTS cart(
+	// iD        SERIAL  PRIMARY KEY,
+	// user_id    int   NOT NULL,
+	// product_id int   NOT NULL,
+	// quantity  int   NOT NULL,
+	// price     NUMERIC NOT NULL,
+	// total     NUMERIC,
+	// checkout  bool  DEFAULT false,
+	// createdAt date DEFAULT current_date,
+	// updatedAt date DEFAULT current_date,
+	// FOREGIN KEY(user_id) REFERENCES users(id)
+	// FOREGIN KEY(product_id) REFERENCES products(id)
+	// )`)
+	// if err != nil {
+	// 	return err
+	// }
 
-	stmt.Exec()
-	defer stmt.Close()
+	// stmt.Exec()
+	// defer stmt.Close()
 
-	insertStmt, err := db.Db.Prepare(`INSERT INTO cart (user_id,product_id,quantity,price,total,checkout,createdAt,updatedAt,deletedAt) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`)
+	insertStmt, err := db.Db.Prepare(`INSERT INTO cart (user_id,product_id,quantity,price,total,checkout,createdAt,updatedAt) VALUES($1,$2,$3,$4,$5,$6,$7,$8)`)
 	if err != nil {
 		return err
 	}
@@ -91,7 +90,7 @@ func (db *Postgres) SearchProducts(query string) ([]models.Product, error) {
 
 	for res.Next() {
 		var product models.Product
-		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt, &product.DeletedAt); err != nil {
+		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt); err != nil {
 			return nil, err
 		}
 		products = append(products, product)

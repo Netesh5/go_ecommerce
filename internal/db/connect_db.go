@@ -53,6 +53,33 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+		CREATE TABLE IF NOT EXISTS products(
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(255) NOT NULL,
+		description VARCHAR(255) NOT NULL,
+		price NUMERIC NOT NULL,
+		image VARCHAR(255) NOT NULL,
+		stock NUMERIC NOT NULL,
+		category VARCHAR(100) NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);
+
+
+		CREATE TABLE IF NOT EXISTS cart(
+		id      SERIAL PRIMARY KEY,
+		user_id    int   NOT NULL,
+		product_id int   NOT NULL,
+		quantity  int   NOT NULL,
+		price     NUMERIC NOT NULL,
+		total     NUMERIC NOT NULL, 
+		checkout  bool  DEFAULT false,
+		createdAt date DEFAULT current_date,
+		updatedAt date DEFAULT current_date,
+		FOREIGN KEY(user_id) REFERENCES users(id),
+		FOREIGN KEY(product_id) REFERENCES products(id)
+	);
 		`)
 	if dbErr != nil {
 		log.Fatalln(dbErr.Error())
