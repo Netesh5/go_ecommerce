@@ -68,6 +68,16 @@ func GetAddressByID(e echo.Context) error {
 	return e.JSON(http.StatusOK, address)
 }
 
+// GetAddresses godoc
+// @Summary Get user addresses
+// @Description Retrieve all addresses for the authenticated user
+// @Tags addresses
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {array} models.Address "List of user addresses"
+// @Failure 500 {string} string "Error message"
+// @Router /addresses [get]
 func GetAddresses(e echo.Context) error {
 	userId := e.Get("user").(models.User)
 
