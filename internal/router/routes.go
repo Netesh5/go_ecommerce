@@ -20,17 +20,17 @@ var Routes = Routers{
 		Path:       "/login",
 		HandleFunc: controllers.Login,
 	},
-	// {
-	// 	Name:       "VerfyEmail",
-	// 	Method:     http.MethodPost,
-	// 	Path:       "/verify-email",
-	// 	HandleFunc: controllers.VerfiyEmail,
-	// },
 	{
-		Name:   "VerifyOTP",
-		Method: http.MethodPost,
-		Path:   "/verify-otp",
-		// HandleFunc: controllers.VerifyOTP,
+		Name:       "VerfyOTP",
+		Method:     http.MethodPost,
+		Path:       "auth/verify-email-otp",
+		HandleFunc: controllers.VerifyEmailVerificationOTP,
+	},
+	{
+		Name:       "SendOTP",
+		Method:     http.MethodPost,
+		Path:       "auth/send-email-otp",
+		HandleFunc: controllers.VerifyEmailVerificationOTP,
 	},
 	{
 		Name:   "ResendEmail",

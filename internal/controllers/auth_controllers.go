@@ -191,7 +191,7 @@ func verfifyPassword(userPassword string, currentPassword string) (bool, error) 
 // @Param payload body models.OTPData true "Email information"
 // @Success 200 {object} responsehandler.ResponseSuccess "OTP sent successfully"
 // @Failure 400 {object} responsehandler.ResponseError "Invalid email or OTP sending failed"
-// @Router /auth/verify/email/send-otp [post]
+// @Router /auth/send-email-otp [post]
 // @Security ApiKeyAuth
 func SendEmailVerificationOTP(e echo.Context) error {
 	var payload models.OTPData
