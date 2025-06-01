@@ -50,13 +50,6 @@ definitions:
     - quantity
     - user_id
     type: object
-  models.OTPData:
-    properties:
-      email:
-        type: string
-    required:
-    - email
-    type: object
   models.Product:
     properties:
       category:
@@ -138,16 +131,6 @@ definitions:
     - name
     - password
     - phone
-    type: object
-  models.VerfiyOTP:
-    properties:
-      Email:
-        $ref: '#/definitions/models.OTPData'
-      code:
-        type: string
-    required:
-    - Email
-    - code
     type: object
   responsehandler.ErrorHandler:
     properties:
@@ -261,13 +244,6 @@ paths:
       consumes:
       - application/json
       description: Sends a one-time password to the user's email for verification
-      parameters:
-      - description: Email information
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/models.OTPData'
       produces:
       - application/json
       responses:
@@ -276,26 +252,26 @@ paths:
           schema:
             $ref: '#/definitions/responsehandler.SuccessResponse'
         "400":
-          description: Invalid email or OTP sending failed
+          description: OTP sending failed
           schema:
             $ref: '#/definitions/responsehandler.ErrorHandler'
       security:
       - ApiKeyAuth: []
       summary: Send email verification OTP
       tags:
-      - authentication
+      - auth
   /auth/verify-email-otp:
     post:
       consumes:
       - application/json
       description: Verifies the OTP sent to the user's email for email verification
       parameters:
-      - description: OTP verification data
+      - description: Verification code
         in: body
-        name: payload
+        name: code
         required: true
         schema:
-          $ref: '#/definitions/models.VerfiyOTP'
+          type: string
       produces:
       - application/json
       responses:

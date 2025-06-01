@@ -162,20 +162,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "authentication"
+                    "auth"
                 ],
                 "summary": "Send email verification OTP",
-                "parameters": [
-                    {
-                        "description": "Email information",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.OTPData"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OTP sent successfully",
@@ -184,7 +173,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid email or OTP sending failed",
+                        "description": "OTP sending failed",
                         "schema": {
                             "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
@@ -212,12 +201,12 @@
                 "summary": "Verify email verification OTP",
                 "parameters": [
                     {
-                        "description": "OTP verification data",
-                        "name": "payload",
+                        "description": "Verification code",
+                        "name": "code",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.VerfiyOTP"
+                            "type": "string"
                         }
                     }
                 ],
@@ -738,17 +727,6 @@
                 }
             }
         },
-        "models.OTPData": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Product": {
             "type": "object",
             "properties": {
@@ -864,21 +842,6 @@
                     "minLength": 6
                 },
                 "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.VerfiyOTP": {
-            "type": "object",
-            "required": [
-                "Email",
-                "code"
-            ],
-            "properties": {
-                "Email": {
-                    "$ref": "#/definitions/models.OTPData"
-                },
-                "code": {
                     "type": "string"
                 }
             }

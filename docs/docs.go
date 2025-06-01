@@ -168,20 +168,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "authentication"
+                    "auth"
                 ],
                 "summary": "Send email verification OTP",
-                "parameters": [
-                    {
-                        "description": "Email information",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.OTPData"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OTP sent successfully",
@@ -190,7 +179,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid email or OTP sending failed",
+                        "description": "OTP sending failed",
                         "schema": {
                             "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
@@ -218,12 +207,12 @@ const docTemplate = `{
                 "summary": "Verify email verification OTP",
                 "parameters": [
                     {
-                        "description": "OTP verification data",
-                        "name": "payload",
+                        "description": "Verification code",
+                        "name": "code",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.VerfiyOTP"
+                            "type": "string"
                         }
                     }
                 ],
@@ -744,17 +733,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.OTPData": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Product": {
             "type": "object",
             "properties": {
@@ -870,21 +848,6 @@ const docTemplate = `{
                     "minLength": 6
                 },
                 "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.VerfiyOTP": {
-            "type": "object",
-            "required": [
-                "Email",
-                "code"
-            ],
-            "properties": {
-                "Email": {
-                    "$ref": "#/definitions/models.OTPData"
-                },
-                "code": {
                     "type": "string"
                 }
             }
