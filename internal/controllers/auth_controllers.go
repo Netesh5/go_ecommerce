@@ -182,6 +182,17 @@ func verfifyPassword(userPassword string, currentPassword string) (bool, error) 
 	return true, nil
 }
 
+// SendEmailVerificationOTP godoc
+// @Summary Send email verification OTP
+// @Description Sends a one-time password to the user's email for verification
+// @Tags authentication
+// @Accept json
+// @Produce json
+// @Param payload body models.OTPData true "Email information"
+// @Success 200 {object} responsehandler.ResponseSuccess "OTP sent successfully"
+// @Failure 400 {object} responsehandler.ResponseError "Invalid email or OTP sending failed"
+// @Router /auth/verify/email/send-otp [post]
+// @Security ApiKeyAuth
 func SendEmailVerificationOTP(e echo.Context) error {
 	var payload models.OTPData
 
@@ -199,6 +210,17 @@ func SendEmailVerificationOTP(e echo.Context) error {
 
 }
 
+// VerifyEmailVerificationOTP godoc
+// @Summary Verify email verification OTP
+// @Description Verifies the OTP sent to the user's email for email verification
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param payload body models.VerfiyOTP true "OTP verification data"
+// @Success 200 {object} responsehandler.SuccessResponse "OTP verified successfully"
+// @Failure 400 {object} responsehandler.ErrorResponse "Error message"
+// @Router /auth/verify-email-otp [post]
+// @Security ApiKeyAuth
 func VerifyEmailVerificationOTP(e echo.Context) error {
 	var payload models.VerfiyOTP
 	user := e.Get("user").(models.User)
