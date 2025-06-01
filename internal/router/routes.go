@@ -23,14 +23,14 @@ var Routes = Routers{
 	{
 		Name:       "VerfyOTP",
 		Method:     http.MethodPost,
-		Path:       "auth/verify-email-otp",
+		Path:       "/auth/verify-email-otp",
 		HandleFunc: controllers.VerifyEmailVerificationOTP,
 	},
 	{
 		Name:       "SendOTP",
 		Method:     http.MethodPost,
-		Path:       "auth/send-email-otp",
-		HandleFunc: controllers.VerifyEmailVerificationOTP,
+		Path:       "/auth/send-email-otp",
+		HandleFunc: controllers.SendEmailVerificationOTP,
 	},
 	{
 		Name:   "ResendEmail",

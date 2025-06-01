@@ -28,7 +28,7 @@ func TwilioSendOTP(email string) (string, error) {
 		return "", err
 	}
 
-	return *res.Sid, err
+	return *res.Sid, nil
 }
 
 func TwilioVerifyOTP(email string, code string) error {

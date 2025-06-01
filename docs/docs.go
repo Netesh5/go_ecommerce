@@ -153,6 +153,96 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/send-email-otp": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Sends a one-time password to the user's email for verification",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authentication"
+                ],
+                "summary": "Send email verification OTP",
+                "parameters": [
+                    {
+                        "description": "Email information",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.OTPData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP sent successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email or OTP sending failed",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/verify-email-otp": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Verifies the OTP sent to the user's email for email verification",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verify email verification OTP",
+                "parameters": [
+                    {
+                        "description": "OTP verification data",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.VerfiyOTP"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP verified successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error message",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
         "/buy-cart": {
             "get": {
                 "description": "Retrieve all items in the user's cart",
@@ -577,48 +667,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/verify-email": {
-            "get": {
-                "description": "Verify email format",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Verify Email",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Email address",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -693,6 +741,17 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.OTPData": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
                 }
             }
         },
@@ -811,6 +870,21 @@ const docTemplate = `{
                     "minLength": 6
                 },
                 "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.VerfiyOTP": {
+            "type": "object",
+            "required": [
+                "Email",
+                "code"
+            ],
+            "properties": {
+                "Email": {
+                    "$ref": "#/definitions/models.OTPData"
+                },
+                "code": {
                     "type": "string"
                 }
             }

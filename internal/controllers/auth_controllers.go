@@ -189,24 +189,24 @@ func verfifyPassword(userPassword string, currentPassword string) (bool, error) 
 // @Accept json
 // @Produce json
 // @Param payload body models.OTPData true "Email information"
-// @Success 200 {object} responsehandler.ResponseSuccess "OTP sent successfully"
-// @Failure 400 {object} responsehandler.ResponseError "Invalid email or OTP sending failed"
+// @Success 200 {object} responsehandler.SuccessResponse "OTP sent successfully"
+// @Failure 400 {object} responsehandler.ErrorHandler "Invalid email or OTP sending failed"
 // @Router /auth/send-email-otp [post]
 // @Security ApiKeyAuth
 func SendEmailVerificationOTP(e echo.Context) error {
-	var payload models.OTPData
 
+	user := e.Get("user").(models.User)
+	var payload models.OTPData
+	payload.Email = user.Email
 	if err := e.Validate(&payload); err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid email"))
 	}
-
-	user := e.Get("user").(models.User)
 
 	if _, err := service.TwilioSendOTP(user.Email); err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
 	}
 
-	return e.JSON(http.StatusBadRequest, responsehandler.SuccessMessage("otp sent successfully"))
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("otp sent successfully"))
 
 }
 
@@ -218,7 +218,7 @@ func SendEmailVerificationOTP(e echo.Context) error {
 // @Produce json
 // @Param payload body models.VerfiyOTP true "OTP verification data"
 // @Success 200 {object} responsehandler.SuccessResponse "OTP verified successfully"
-// @Failure 400 {object} responsehandler.ErrorResponse "Error message"
+// @Failure 400 {object} responsehandler.ErrorHandler "Error message"
 // @Router /auth/verify-email-otp [post]
 // @Security ApiKeyAuth
 func VerifyEmailVerificationOTP(e echo.Context) error {

@@ -50,6 +50,13 @@ definitions:
     - quantity
     - user_id
     type: object
+  models.OTPData:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
   models.Product:
     properties:
       category:
@@ -131,6 +138,16 @@ definitions:
     - name
     - password
     - phone
+    type: object
+  models.VerfiyOTP:
+    properties:
+      Email:
+        $ref: '#/definitions/models.OTPData'
+      code:
+        type: string
+    required:
+    - Email
+    - code
     type: object
   responsehandler.ErrorHandler:
     properties:
@@ -239,6 +256,62 @@ paths:
       summary: Get user addresses
       tags:
       - addresses
+  /auth/send-email-otp:
+    post:
+      consumes:
+      - application/json
+      description: Sends a one-time password to the user's email for verification
+      parameters:
+      - description: Email information
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.OTPData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP sent successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Invalid email or OTP sending failed
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Send email verification OTP
+      tags:
+      - authentication
+  /auth/verify-email-otp:
+    post:
+      consumes:
+      - application/json
+      description: Verifies the OTP sent to the user's email for email verification
+      parameters:
+      - description: OTP verification data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerfiyOTP'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP verified successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Error message
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Verify email verification OTP
+      tags:
+      - auth
   /buy-cart:
     get:
       consumes:
@@ -506,34 +579,6 @@ paths:
           schema:
             $ref: '#/definitions/responsehandler.ErrorHandler'
       summary: singup
-      tags:
-      - auth
-  /verify-email:
-    get:
-      consumes:
-      - application/json
-      description: Verify email format
-      parameters:
-      - description: Email address
-        in: query
-        name: email
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Verify Email
       tags:
       - auth
 swagger: "2.0"
