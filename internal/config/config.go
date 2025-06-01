@@ -16,6 +16,7 @@ type Config struct {
 	Server      HttpServer `yaml:"http_server"`
 	ApiVersion  string     `yaml:"api_version" env:"API_VERSION" env-default:"v1"`
 	DbConfig    DBCOfig    `yaml:"db" env-required:"true"`
+	OtpConfig   OTPConfig  `env-required:"true"`
 }
 type HttpServer struct {
 	Address string
@@ -27,6 +28,12 @@ type DBCOfig struct {
 	User     string
 	Password string
 	DbName   string
+}
+
+type OTPConfig struct {
+	AccountSID string
+	AuthToken  string
+	ServiceSID string
 }
 
 func LoadConfig() *Config {
@@ -55,6 +62,12 @@ func LoadConfig() *Config {
 	config.DbConfig.Password = os.Getenv("DB_PASSWORD")
 	config.DbConfig.Host = os.Getenv("DB_HOST")
 	config.DbConfig.DbName = os.Getenv("DB_NAME")
+
+	// OPT
+
+	config.OtpConfig.AccountSID = os.Getenv("SENDGRID_ACCOUNT_SID")
+	config.OtpConfig.AuthToken = os.Getenv("SENDGRID_AUTH_TOKEN")
+	config.OtpConfig.ServiceSID = os.Getenv("SENDGRID_SERVICE_SID")
 
 	if port, err := strconv.Atoi(os.Getenv("DB_PORT")); err == nil {
 		config.DbConfig.Port = port
