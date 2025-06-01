@@ -3,16 +3,14 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"net/url"
-	"regexp"
 	"time"
 
 	"github.com/labstack/echo/v4"
-	contants "github.com/netesh5/go_ecommerce/internal/constant"
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
 	"github.com/netesh5/go_ecommerce/internal/models"
+	service "github.com/netesh5/go_ecommerce/internal/services"
 	token "github.com/netesh5/go_ecommerce/internal/tokens"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -152,34 +150,67 @@ func Login(e echo.Context) error {
 
 }
 
-// VerfiyEmail godoc
-// @Summary Verify Email
-// @Description Verify email format
-// @Tags auth
-// @Accept  json
-// @Produce  json
-// @Param email query string true "Email address"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Router /verify-email [get]
-func VerfiyEmail(e echo.Context) error {
-	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	emailParam := e.Param("email")
-	email, err := url.QueryUnescape(emailParam)
-	if err != nil || email == "" {
-		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(contants.EmailValidaionError))
-	}
+// // VerfiyEmail godoc
+// // @Summary Verify Email
+// // @Description Verify email format
+// // @Tags auth
+// // @Accept  json
+// // @Produce  json
+// // @Param email query string true "Email address"
+// // @Success 200 {object} map[string]interface{}
+// // @Failure 400 {object} map[string]string
+// // @Router /verify-email [get]
+// func VerfiyEmail(e echo.Context) error {
+// 	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+// 	emailParam := e.Param("email")
+// 	email, err := url.QueryUnescape(emailParam)
+// 	if err != nil || email == "" {
+// 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(contants.EmailValidaionError))
+// 	}
 
-	// Validate email format
-	if !emailRegex.MatchString(email) {
-		e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(contants.EmailValidaionError))
-	}
+// 	// Validate email format
+// 	if !emailRegex.MatchString(email) {
+// 		e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(contants.EmailValidaionError))
+// 	}
 
-	return nil
-}
+//		return nil
+//	}
 func verfifyPassword(userPassword string, currentPassword string) (bool, error) {
 	if err := bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(currentPassword)); err != nil {
 		return false, fmt.Errorf("password is incorrect")
 	}
 	return true, nil
+}
+
+func SendEmailVerificationOTP(e echo.Context) error {
+	var payload models.OTPData
+
+	if err := e.Validate(&payload); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid email"))
+	}
+
+	user := e.Get("user").(models.User)
+
+	if _, err := service.TwilioSendOTP(user.Email); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	return e.JSON(http.StatusBadRequest, responsehandler.SuccessMessage("otp sent successfully"))
+
+}
+
+func VerifyEmailVerificationOTP(e echo.Context) error {
+	var payload models.VerfiyOTP
+	user := e.Get("user").(models.User)
+	payload.Email.Email = user.Email
+
+	if err := e.Bind(&payload); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	if err := service.TwilioVerifyOTP(payload.Email.Email, payload.Code); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("OTP verified successfully"))
 }
