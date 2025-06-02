@@ -230,7 +230,7 @@ func VerifyEmailVerificationOTP(e echo.Context) error {
 	}
 
 	if err := service.TwilioVerifyOTP(payload.Email.Email, payload.Code); err != nil {
-		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("Invalid code"))
 	}
 
 	db := db.DB()
