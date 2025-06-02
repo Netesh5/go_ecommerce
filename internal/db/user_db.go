@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
@@ -88,16 +89,21 @@ func (db *Postgres) GetUserByID(id int) (models.User, error) {
 }
 
 func (db *Postgres) UpdateUser(user models.User) (models.User, error) {
-	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4,token=$5,refresh_token=$6,phone=$7 WHERE id = $8`)
+	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4,token=$5,refresh_token=$6,phone=$7,is_verified=$8 WHERE id = $9`)
 	if err != nil {
 		return models.User{}, err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.ID)
+	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.Verfiy, user.ID)
 	if err != nil {
 		return models.User{}, err
 	}
 
 	return user, nil
+}
+
+func (db *Postgres) MarkUserVerified(userID int) error {
+	_, err := db.Db.Exec(`UPDATE users SET is_verified = TRUE, updated_at = $1 WHERE id = $2`, time.Now().UTC(), userID)
+	return err
 }
