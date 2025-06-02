@@ -235,7 +235,6 @@ func VerifyEmailVerificationOTP(e echo.Context) error {
 
 	db := db.DB()
 
-	user.Verfiy = true
 	err := db.MarkUserVerified(user.ID)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
