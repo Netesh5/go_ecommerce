@@ -86,4 +86,22 @@ var Routes = Routers{
 		Path:       "/addresses",
 		HandleFunc: controllers.GetAddresses,
 	},
+	{
+		Name:       "ForgetPassword",
+		Method:     http.MethodPost,
+		Path:       "/auth/forget-password",
+		HandleFunc: controllers.ForgetPassword,
+	},
+	{
+		Name:       "VerfiyPasswordOTP",
+		Method:     http.MethodPost,
+		Path:       "/auth/verify-reset-otp",
+		HandleFunc: controllers.VerifyPasswordResetOtp,
+	},
+	{
+		Name:       "ResetPassword",
+		Method:     http.MethodPost,
+		Path:       "/auth/reset-password",
+		HandleFunc: controllers.ResetPassword,
+	},
 }
