@@ -122,3 +122,22 @@ func (db *Postgres) CheckEmail(email string) error {
 	}
 	return nil
 }
+
+func (db *Postgres) UpdatePassword(email string, password string) error {
+
+	user, err := db.GetUserByEmail(email)
+	if err != nil {
+		return fmt.Errorf("user not found")
+	}
+
+	stmt, err := db.Db.Prepare(`UPDATE users SET password=$1,updated_at = $2 WHERE id=$3`)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(password, time.Now().UTC(), user.ID)
+	if err != nil {
+		return fmt.Errorf("failed to update password")
+	}
+
+	return nil
+}

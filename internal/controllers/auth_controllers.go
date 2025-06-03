@@ -258,4 +258,48 @@ func ForgetPassword(e echo.Context) error {
 		return e.JSON(http.StatusNotFound, responsehandler.NewErrorHandler("user not found with provided email"))
 	}
 
+	if _, err := service.TwilioSendOTP(requestParam.Email); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("otp sent successfully"))
+}
+
+func VerifyPasswordResetOtp(e echo.Context) error {
+	var requestParam models.VerfiyOTP
+	if err := e.Bind(&requestParam); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid request"))
+	}
+	if err := e.Validate(&requestParam); err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("invalid email address or OTP"))
+	}
+
+	if err := service.TwilioVerifyOTP(requestParam.Email.Email, requestParam.Code); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid OTP code"))
+	}
+
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("OTP verified successfully"))
+}
+
+func ResetPassword(e echo.Context) error {
+	var requestParam models.ResetPassword
+	if err := e.Bind(&requestParam); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid request"))
+	}
+	if err := e.Validate(&requestParam); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input"))
+	}
+	if requestParam.NewPassword != requestParam.ConfirmPassword {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("password didn't match"))
+	}
+	password, err := HashPassword(requestParam.NewPassword)
+	if err != nil {
+		return err
+	}
+
+	db := db.DB()
+	if err := db.UpdatePassword(requestParam.Email.Email, password); err != nil {
+		return err
+	}
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("password updated successfully"))
 }

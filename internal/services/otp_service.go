@@ -41,7 +41,7 @@ func TwilioVerifyOTP(email string, code string) error {
 	}
 
 	if *res.Status != "approved" {
-		return errors.New("not a valid code")
+		return errors.New("invalid OTP code")
 	}
 	return nil
 
