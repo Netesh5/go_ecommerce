@@ -243,6 +243,20 @@ func VerifyEmailVerificationOTP(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("OTP verified successfully"))
 }
 
+// ForgetPassword handles requests for initiating the password reset process.
+// It verifies the provided email address, checks if a user exists with that email,
+// and sends an OTP (One-Time Password) via Twilio service.
+//
+// @Summary Initiate password reset process
+// @Description Sends a one-time password to the user's email for password reset
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body models.ForgetPasswordRequest true "Email address"
+// @Success 200 {object} responsehandler.ResponseSuccess "OTP sent successfully"
+// @Failure 400 {object} responsehandler.ResponseError "Invalid email or OTP sending failed"
+// @Failure 404 {object} responsehandler.ResponseError "User not found"
+// @Router /auth/forget-password [post]
 func ForgetPassword(e echo.Context) error {
 	var requestParam models.ForgetPasswordRequest
 	if err := e.Bind(&requestParam); err != nil {
@@ -265,6 +279,16 @@ func ForgetPassword(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("otp sent successfully"))
 }
 
+// VerifyPasswordResetOtp godoc
+// @Summary Verify password reset OTP
+// @Description Verifies the OTP code sent to user's email for password reset
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body models.VerfiyOTP true "Email and OTP verification details"
+// @Success 200 {object} responsehandler.SuccessResponse "OTP verified successfully"
+// @Failure 400 {object} responsehandler.ErrorResponse "Invalid request, email address, OTP or code"
+// @Router /auth/verify-reset-otp [post]
 func VerifyPasswordResetOtp(e echo.Context) error {
 	var requestParam models.VerfiyOTP
 	if err := e.Bind(&requestParam); err != nil {
@@ -281,6 +305,17 @@ func VerifyPasswordResetOtp(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("OTP verified successfully"))
 }
 
+// ResetPassword godoc
+// @Summary Reset user password
+// @Description Resets a user's password after verification
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body models.ResetPassword true "Password reset details"
+// @Success 200 {object} responsehandler.ResponseHandler "password updated successfully"
+// @Failure 400 {object} responsehandler.ErrorHandler "invalid request, invalid input, or password didn't match"
+// @Failure 500 {object} responsehandler.ErrorHandler "internal server error"
+// @Router /auth/reset-password [post]
 func ResetPassword(e echo.Context) error {
 	var requestParam models.ResetPassword
 	if err := e.Bind(&requestParam); err != nil {
