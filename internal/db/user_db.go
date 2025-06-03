@@ -107,3 +107,18 @@ func (db *Postgres) MarkUserVerified(userID int) error {
 	_, err := db.Db.Exec(`UPDATE users SET is_verified = TRUE, updated_at = $1 WHERE id = $2`, time.Now().UTC(), userID)
 	return err
 }
+
+func (db *Postgres) CheckEmail(email string) error {
+	stmt, err := db.Db.Prepare(`SELECT email from users WHERE email=$1`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	var user models.User
+
+	err = stmt.QueryRow(email).Scan(&user.Email)
+	if err != nil {
+		return err
+	}
+	return nil
+}

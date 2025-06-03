@@ -242,3 +242,20 @@ func VerifyEmailVerificationOTP(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("OTP verified successfully"))
 }
+
+func ForgetPassword(e echo.Context) error {
+	var requestParam models.ForgetPasswordRequest
+	if err := e.Bind(&requestParam); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("valid email address is required"))
+	}
+	if err := e.Validate(&requestParam); err != nil {
+		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler("invalid email address"))
+	}
+
+	db := db.DB()
+
+	if err := db.CheckEmail(requestParam.Email); err != nil {
+		return e.JSON(http.StatusNotFound, responsehandler.NewErrorHandler("user not found with provided email"))
+	}
+
+}
