@@ -147,6 +147,98 @@
                 }
             }
         },
+        "/auth/forget-password": {
+            "post": {
+                "description": "Sends a one-time password to the user's email for password reset",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Initiate password reset process",
+                "parameters": [
+                    {
+                        "description": "Email address",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ForgetPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP sent successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email or OTP sending failed",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/reset-password": {
+            "post": {
+                "description": "Resets a user's password after verification",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Reset user password",
+                "parameters": [
+                    {
+                        "description": "Password reset details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ResetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "password updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request, invalid input, or password didn't match",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/send-email-otp": {
             "post": {
                 "security": [
@@ -219,6 +311,46 @@
                     },
                     "400": {
                         "description": "Error message",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/verify-reset-otp": {
+            "post": {
+                "description": "Verifies the OTP code sent to user's email for password reset",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verify password reset OTP",
+                "parameters": [
+                    {
+                        "description": "Email and OTP verification details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.VerfiyOTP"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP verified successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request, email address, OTP or code",
                         "schema": {
                             "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }
@@ -727,6 +859,28 @@
                 }
             }
         },
+        "models.ForgetPasswordRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.OTPData": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Product": {
             "type": "object",
             "properties": {
@@ -755,6 +909,25 @@
                     "type": "integer"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResetPassword": {
+            "type": "object",
+            "required": [
+                "confirm_password",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "confirm_password": {
+                    "type": "string"
+                },
+                "email": {
+                    "$ref": "#/definitions/models.ForgetPasswordRequest"
+                },
+                "password": {
                     "type": "string"
                 }
             }
@@ -842,6 +1015,21 @@
                     "minLength": 6
                 },
                 "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.VerfiyOTP": {
+            "type": "object",
+            "required": [
+                "Email",
+                "code"
+            ],
+            "properties": {
+                "Email": {
+                    "$ref": "#/definitions/models.OTPData"
+                },
+                "code": {
                     "type": "string"
                 }
             }

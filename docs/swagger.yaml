@@ -50,6 +50,20 @@ definitions:
     - quantity
     - user_id
     type: object
+  models.ForgetPasswordRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  models.OTPData:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
   models.Product:
     properties:
       category:
@@ -70,6 +84,19 @@ definitions:
         type: integer
       updated_at:
         type: string
+    type: object
+  models.ResetPassword:
+    properties:
+      confirm_password:
+        type: string
+      email:
+        $ref: '#/definitions/models.ForgetPasswordRequest'
+      password:
+        type: string
+    required:
+    - confirm_password
+    - email
+    - password
     type: object
   models.User:
     properties:
@@ -131,6 +158,16 @@ definitions:
     - name
     - password
     - phone
+    type: object
+  models.VerfiyOTP:
+    properties:
+      Email:
+        $ref: '#/definitions/models.OTPData'
+      code:
+        type: string
+    required:
+    - Email
+    - code
     type: object
   responsehandler.ErrorHandler:
     properties:
@@ -239,6 +276,66 @@ paths:
       summary: Get user addresses
       tags:
       - addresses
+  /auth/forget-password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a one-time password to the user's email for password reset
+      parameters:
+      - description: Email address
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ForgetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP sent successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Invalid email or OTP sending failed
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      summary: Initiate password reset process
+      tags:
+      - auth
+  /auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Resets a user's password after verification
+      parameters:
+      - description: Password reset details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ResetPassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: password updated successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: invalid request, invalid input, or password didn't match
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      summary: Reset user password
+      tags:
+      - auth
   /auth/send-email-otp:
     post:
       consumes:
@@ -286,6 +383,32 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Verify email verification OTP
+      tags:
+      - auth
+  /auth/verify-reset-otp:
+    post:
+      consumes:
+      - application/json
+      description: Verifies the OTP code sent to user's email for password reset
+      parameters:
+      - description: Email and OTP verification details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerfiyOTP'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP verified successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Invalid request, email address, OTP or code
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      summary: Verify password reset OTP
       tags:
       - auth
   /buy-cart:

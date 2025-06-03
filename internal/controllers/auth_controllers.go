@@ -253,9 +253,9 @@ func VerifyEmailVerificationOTP(e echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param request body models.ForgetPasswordRequest true "Email address"
-// @Success 200 {object} responsehandler.ResponseSuccess "OTP sent successfully"
-// @Failure 400 {object} responsehandler.ResponseError "Invalid email or OTP sending failed"
-// @Failure 404 {object} responsehandler.ResponseError "User not found"
+// @Success 200 {object} responsehandler.SuccessResponse "OTP sent successfully"
+// @Failure 400 {object} responsehandler.ErrorHandler "Invalid email or OTP sending failed"
+// @Failure 404 {object} responsehandler.ErrorHandler "User not found"
 // @Router /auth/forget-password [post]
 func ForgetPassword(e echo.Context) error {
 	var requestParam models.ForgetPasswordRequest
@@ -287,7 +287,7 @@ func ForgetPassword(e echo.Context) error {
 // @Produce json
 // @Param request body models.VerfiyOTP true "Email and OTP verification details"
 // @Success 200 {object} responsehandler.SuccessResponse "OTP verified successfully"
-// @Failure 400 {object} responsehandler.ErrorResponse "Invalid request, email address, OTP or code"
+// @Failure 400 {object} responsehandler.ErrorHandler "Invalid request, email address, OTP or code"
 // @Router /auth/verify-reset-otp [post]
 func VerifyPasswordResetOtp(e echo.Context) error {
 	var requestParam models.VerfiyOTP
@@ -312,7 +312,7 @@ func VerifyPasswordResetOtp(e echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param request body models.ResetPassword true "Password reset details"
-// @Success 200 {object} responsehandler.ResponseHandler "password updated successfully"
+// @Success 200 {object} responsehandler.SuccessResponse "password updated successfully"
 // @Failure 400 {object} responsehandler.ErrorHandler "invalid request, invalid input, or password didn't match"
 // @Failure 500 {object} responsehandler.ErrorHandler "internal server error"
 // @Router /auth/reset-password [post]
