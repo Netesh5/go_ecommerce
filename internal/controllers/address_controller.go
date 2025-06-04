@@ -91,3 +91,12 @@ func GetAddresses(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(addresses, ""))
 
 }
+
+func AddAddress(e echo.Context) error {
+	var address models.Address
+
+	if err := e.Bind(&address); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
+	}
+
+}
