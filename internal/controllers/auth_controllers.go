@@ -338,3 +338,5 @@ func ResetPassword(e echo.Context) error {
 	}
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("password updated successfully"))
 }
+
+
