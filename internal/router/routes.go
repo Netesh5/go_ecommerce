@@ -44,11 +44,7 @@ var Routes = Routers{
 		Path:       "/products",
 		HandleFunc: controllers.SearchProducts,
 	},
-	// {
-	// 	Name:       "GetProductByID",
-	// 	Method:     http.MethodGet,
-	// 	Path: 	 "/products/:id",
-	// }
+
 	{
 		Name:       "AddProductToCart",
 		Method:     http.MethodPost,
