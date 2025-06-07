@@ -67,11 +67,13 @@ func (db *Postgres) GetUserAddresses(userId int) ([]models.Address, error) {
 }
 
 func (db *Postgres) AddUserAddress(address models.Address) error {
-	stmt, err := db.Db.Prepare(`UPDATE addresses SET street=$1,city=$2,state=$3,country=$4,postal_code=$5,updated_at=$6 WHERE user_id=$7`)
+	stmt, err := db.Db.Prepare(`INSERT INTO addresses (street,city,state,country,postal_code,user_id,updated_at)
+	VALUES ($1,$2,$3,$4,$5,$6,$7)
+	`)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(address.Street, address.City, address.State, address.Country, address.ZipCode, time.Now().UTC(), address.UserId)
+	_, err = stmt.Exec(address.Street, address.City, address.State, address.Country, address.ZipCode, address.UserId, time.Now().UTC())
 	if err != nil {
 		return fmt.Errorf("couldn't add user address")
 	}
