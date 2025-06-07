@@ -845,16 +845,13 @@ const docTemplate = `{
         "models.Address": {
             "type": "object",
             "required": [
-                "address",
                 "city",
                 "country",
                 "state",
+                "street",
                 "zip_code"
             ],
             "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "city": {
                     "type": "string"
                 },
@@ -868,6 +865,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "state": {
+                    "type": "string"
+                },
+                "street": {
                     "type": "string"
                 },
                 "updated_at": {
