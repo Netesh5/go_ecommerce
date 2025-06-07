@@ -16,17 +16,29 @@ import (
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
-// @Success 200 {object} responsehandler.SuccessResponse{data=models.User} "User data successfully retrieved"
+// @Success 200 {object} responsehandler.SuccessResponse{data=models.GetUserResponse} "User data successfully retrieved"
 // @Failure 400 {object} responsehandler.ErrorHandler "Error retrieving user data"
 // @Router /user/getme [get]
 func GetUser(e echo.Context) error {
 	user := e.Get("user").(models.User)
+
 	db := db.DB()
-	res, err := db.GetUserByID(user.ID)
+	res, err := db.GetUserByEmail(user.Email)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(res, ""))
+
+	newRes := models.GetUserResponse{
+		ID:        res.ID,
+		Name:      res.Name,
+		Email:     res.Email,
+		Phone:     res.Phone,
+		Address:   res.Address,
+		Verfiy:    res.Verfiy,
+		CreatedAt: res.CreatedAt,
+		UpdatedAt: res.UpdatedAt,
+	}
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(newRes, ""))
 }
 
 // @Summary Update a user's information

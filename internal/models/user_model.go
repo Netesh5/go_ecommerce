@@ -47,6 +47,16 @@ type UserResponse struct {
 	RefreshToken string    `json:"refresh_token"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
+type GetUserResponse struct {
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	CreatedAt time.Time `json:"created_at"`
+	Address   []Address `json:"address"`
+	Verfiy    bool      `json:"is_verified"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
 
 type UserRequest struct {
 	Name     string `json:"name" validate:"required,min=2,max=30"`

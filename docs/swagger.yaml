@@ -63,6 +63,27 @@ definitions:
     required:
     - email
     type: object
+  models.GetUserResponse:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      is_verified:
+        type: boolean
+      name:
+        type: string
+      phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
   models.OTPData:
     properties:
       email:
@@ -788,7 +809,7 @@ paths:
             - $ref: '#/definitions/responsehandler.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/models.User'
+                  $ref: '#/definitions/models.GetUserResponse'
               type: object
         "400":
           description: Error retrieving user data
