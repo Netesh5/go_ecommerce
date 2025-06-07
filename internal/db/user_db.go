@@ -45,7 +45,7 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 	for res.Next() {
 		var addr models.Address
 
-		if err := res.Scan(&addr.Id, &addr.UserId, &addr.Address, &addr.City, &addr.Country, &addr.State, &addr.ZipCode, &addr.CreatedAt, &addr.UpdatedAt); err != nil {
+		if err := res.Scan(&addr.Id, &addr.UserId, &addr.Street, &addr.City, &addr.Country, &addr.State, &addr.ZipCode, &addr.CreatedAt, &addr.UpdatedAt); err != nil {
 			return models.User{}, err
 		}
 

@@ -20,7 +20,7 @@ type User struct {
 
 type Address struct {
 	Id        int    `json:"id"`
-	Address   string `json:"address" validate:"required"`
+	Street    string `json:"street" validate:"required"`
 	City      string `json:"city" validate:"required"`
 	State     string `json:"state" validate:"required"`
 	Country   string `json:"country" validate:"required"`
