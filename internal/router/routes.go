@@ -106,4 +106,22 @@ var Routes = Routers{
 		Path:       "/address",
 		HandleFunc: controllers.AddAddress,
 	},
+	{
+		Name:       "GetUser",
+		Method:     http.MethodGet,
+		Path:       "/user/getme",
+		HandleFunc: controllers.GetUser,
+	},
+	{
+		Name:       "UpdateUser",
+		Method:     http.MethodPut,
+		Path:       "/user",
+		HandleFunc: controllers.UpdateUser,
+	},
+	{
+		Name:       "UpdatePassword",
+		Method:     http.MethodPut,
+		Path:       "/user/password",
+		HandleFunc: controllers.UpdatePassword,
+	},
 }

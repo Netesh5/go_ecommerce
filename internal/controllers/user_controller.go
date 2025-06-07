@@ -18,7 +18,7 @@ import (
 // @Security ApiKeyAuth
 // @Success 200 {object} responsehandler.SuccessResponse{data=models.user} "User data successfully retrieved"
 // @Failure 400 {object} responsehandler.ErrorResponse "Error retrieving user data"
-// @Router /user [get]
+// @Router /user/getme [get]
 func GetUser(e echo.Context) error {
 	user := e.Get("user").(models.User)
 	db := db.DB()
@@ -37,7 +37,7 @@ func GetUser(e echo.Context) error {
 // @Param user body models.User true "User information"
 // @Success 200 {object} responsehandler.SuccessResponse "User info updated successfully"
 // @Failure 400 {object} responsehandler.ErrorHandler "Invalid input / Required fields are missing / Couldn't update user info"
-// @Router /users [put]
+// @Router /user [put]
 func UpdateUser(e echo.Context) error {
 	var user models.User
 
@@ -58,6 +58,17 @@ func UpdateUser(e echo.Context) error {
 	return e.JSON(http.StatusBadRequest, responsehandler.SuccessMessage("user info updated successfully"))
 }
 
+// UpdatePassword godoc
+// @Summary Update user password
+// @Description Allows authenticated users to update their password by providing current password and new password
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param updatePassword body models.UpdatePassword true "Password update information"
+// @Success 200 {object} responsehandler.ResponseHandler "Password updated successfully"
+// @Failure 400 {object} responsehandler.ErrorHandler "Error messages for invalid input, missing fields, password mismatch, user not found, incorrect current password, or update failure"
+// @Security BearerAuth
+// @Router /users/password [put]
 func UpdatePassword(e echo.Context) error {
 	var updatePassword models.UpdatePassword
 
