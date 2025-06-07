@@ -133,7 +133,7 @@ func Login(e echo.Context) error {
 
 	res.Token = accessToken
 	res.RefreshToken = refreshToken
-	postgres.UpdateUser(res)
+	postgres.UpdateToken(res)
 
 	userResponse := models.UserResponse{
 		ID:           res.ID,
@@ -338,5 +338,3 @@ func ResetPassword(e echo.Context) error {
 	}
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("password updated successfully"))
 }
-
-

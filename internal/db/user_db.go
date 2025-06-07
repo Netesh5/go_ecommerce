@@ -89,13 +89,40 @@ func (db *Postgres) GetUserByID(id int) (models.User, error) {
 }
 
 func (db *Postgres) UpdateUser(user models.User) (models.User, error) {
-	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, password = $3, updated_at = $4,token=$5,refresh_token=$6,phone=$7,is_verified=$8 WHERE id = $9`)
+	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, updated_at = $3,token=$4,refresh_token=$5,phone=$6,is_verified=$7 WHERE id = $8`)
 	if err != nil {
 		return models.User{}, err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Name, user.Email, user.Password, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.Verfiy, user.ID)
+	_, err = stmt.Exec(user.Name, user.Email, user.UpdatedAt, user.Token, user.RefreshToken, user.Phone, user.Verfiy, user.ID)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+func (db *Postgres) UpdateUserInfo(user models.User) (models.User, error) {
+	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, updated_at = $3,phone=$4 WHERE id = $5`)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.Name, user.Email, user.UpdatedAt, user.Phone, user.ID)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+func (db *Postgres) UpdateToken(user models.User) (models.User, error) {
+	stmt, err := db.Db.Prepare(`UPDATE users SET token=$1,refresh_token=$2 WHERE id = $3`)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(user.Token, user.RefreshToken, user.ID)
 	if err != nil {
 		return models.User{}, err
 	}

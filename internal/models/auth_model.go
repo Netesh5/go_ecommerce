@@ -9,3 +9,9 @@ type ResetPassword struct {
 	NewPassword     string                `json:"password" validate:"required"`
 	ConfirmPassword string                `json:"confirm_password" validate:"required"`
 }
+
+type UpdatePassword struct {
+	CurrentPassword string `json:"current_password" validate:"required"`
+	NewPassword     string `json:"new_password" validate:"required"`
+	ConfirmPassword string `json:"confirm_password" validate:"required"`
+}
