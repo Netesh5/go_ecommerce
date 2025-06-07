@@ -100,4 +100,10 @@ var Routes = Routers{
 		Path:       "/auth/reset-password",
 		HandleFunc: controllers.ResetPassword,
 	},
+	{
+		Name:       "AddUserAddress",
+		Method:     http.MethodPost,
+		Path:       "/address",
+		HandleFunc: controllers.AddAddress,
+	},
 }
