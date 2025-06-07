@@ -839,6 +839,137 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user": {
+            "put": {
+                "description": "Updates user information in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update a user's information",
+                "parameters": [
+                    {
+                        "description": "User information",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User info updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input / Required fields are missing / Couldn't update user info",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/getme": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Retrieves the current user's information from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user information",
+                "responses": {
+                    "200": {
+                        "description": "User data successfully retrieved",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Error retrieving user data",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/password": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows authenticated users to update their password by providing current password and new password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user password",
+                "parameters": [
+                    {
+                        "description": "Password update information",
+                        "name": "updatePassword",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UpdatePassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error messages for invalid input, missing fields, password mismatch, user not found, incorrect current password, or update failure",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -996,6 +1127,25 @@ const docTemplate = `{
                 }
             }
         },
+        "models.UpdatePassword": {
+            "type": "object",
+            "required": [
+                "confirm_password",
+                "current_password",
+                "new_password"
+            ],
+            "properties": {
+                "confirm_password": {
+                    "type": "string"
+                },
+                "current_password": {
+                    "type": "string"
+                },
+                "new_password": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "required": [
@@ -1077,6 +1227,29 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 6
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserUpdate": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
                 },
                 "phone": {
                     "type": "string"

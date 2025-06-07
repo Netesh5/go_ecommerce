@@ -102,16 +102,16 @@ func (db *Postgres) UpdateUser(user models.User) (models.User, error) {
 
 	return user, nil
 }
-func (db *Postgres) UpdateUserInfo(user models.User) (models.User, error) {
+func (db *Postgres) UpdateUserInfo(user models.UserUpdate) (models.UserUpdate, error) {
 	stmt, err := db.Db.Prepare(`UPDATE users SET name = $1, email = $2, updated_at = $3,phone=$4 WHERE id = $5`)
 	if err != nil {
-		return models.User{}, err
+		return models.UserUpdate{}, err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Name, user.Email, user.UpdatedAt, user.Phone, user.ID)
+	_, err = stmt.Exec(user.Name, user.Email, time.Now().UTC(), user.Phone, user.ID)
 	if err != nil {
-		return models.User{}, err
+		return models.UserUpdate{}, err
 	}
 
 	return user, nil

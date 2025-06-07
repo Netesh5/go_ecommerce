@@ -16,8 +16,8 @@ import (
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
-// @Success 200 {object} responsehandler.SuccessResponse{data=models.user} "User data successfully retrieved"
-// @Failure 400 {object} responsehandler.ErrorResponse "Error retrieving user data"
+// @Success 200 {object} responsehandler.SuccessResponse{data=models.User} "User data successfully retrieved"
+// @Failure 400 {object} responsehandler.ErrorHandler "Error retrieving user data"
 // @Router /user/getme [get]
 func GetUser(e echo.Context) error {
 	user := e.Get("user").(models.User)
@@ -34,12 +34,12 @@ func GetUser(e echo.Context) error {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User information"
+// @Param user body models.UserUpdate true "User information"
 // @Success 200 {object} responsehandler.SuccessResponse "User info updated successfully"
 // @Failure 400 {object} responsehandler.ErrorHandler "Invalid input / Required fields are missing / Couldn't update user info"
 // @Router /user [put]
 func UpdateUser(e echo.Context) error {
-	var user models.User
+	var user models.UserUpdate
 
 	if err := e.Bind(&user); err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input"))
@@ -65,7 +65,7 @@ func UpdateUser(e echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param updatePassword body models.UpdatePassword true "Password update information"
-// @Success 200 {object} responsehandler.ResponseHandler "Password updated successfully"
+// @Success 200 {object} responsehandler.SuccessResponse "Password updated successfully"
 // @Failure 400 {object} responsehandler.ErrorHandler "Error messages for invalid input, missing fields, password mismatch, user not found, incorrect current password, or update failure"
 // @Security BearerAuth
 // @Router /users/password [put]

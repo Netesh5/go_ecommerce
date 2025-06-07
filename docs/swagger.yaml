@@ -104,6 +104,19 @@ definitions:
     - email
     - password
     type: object
+  models.UpdatePassword:
+    properties:
+      confirm_password:
+        type: string
+      current_password:
+        type: string
+      new_password:
+        type: string
+    required:
+    - confirm_password
+    - current_password
+    - new_password
+    type: object
   models.User:
     properties:
       address:
@@ -164,6 +177,21 @@ definitions:
     - name
     - password
     - phone
+    type: object
+  models.UserUpdate:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
     type: object
   models.VerfiyOTP:
     properties:
@@ -718,4 +746,87 @@ paths:
       summary: singup
       tags:
       - auth
+  /user:
+    put:
+      consumes:
+      - application/json
+      description: Updates user information in the database
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User info updated successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Invalid input / Required fields are missing / Couldn't update
+            user info
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      summary: Update a user's information
+      tags:
+      - users
+  /user/getme:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the current user's information from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data successfully retrieved
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
+        "400":
+          description: Error retrieving user data
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user information
+      tags:
+      - users
+  /users/password:
+    put:
+      consumes:
+      - application/json
+      description: Allows authenticated users to update their password by providing
+        current password and new password
+      parameters:
+      - description: Password update information
+        in: body
+        name: updatePassword
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password updated successfully
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Error messages for invalid input, missing fields, password
+            mismatch, user not found, incorrect current password, or update failure
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - BearerAuth: []
+      summary: Update user password
+      tags:
+      - users
 swagger: "2.0"
