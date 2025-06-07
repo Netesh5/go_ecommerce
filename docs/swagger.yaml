@@ -20,6 +20,12 @@ definitions:
         type: integer
       zip_code:
         type: string
+    required:
+    - address
+    - city
+    - country
+    - state
+    - zip_code
     type: object
   models.Cart:
     properties:
@@ -191,6 +197,38 @@ info:
   title: Ecommerce API Swagger
   version: "1.0"
 paths:
+  /address:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new address to the user's profile
+      parameters:
+      - description: Address information
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/models.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message with address updated confirmation
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Invalid address input
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a new address for the authenticated user
+      tags:
+      - address
   /address/{id}:
     delete:
       consumes:
