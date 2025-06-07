@@ -9,4 +9,5 @@ type IAddress interface {
 	DeleteUserAddress(id int) error
 	GetUserAddress(id int) (models.Address, error)
 	GetUserAddresses(userId int) ([]models.Address, error)
+	AddUserAddress(models.Address) error
 }

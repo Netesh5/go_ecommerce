@@ -92,14 +92,21 @@ func GetAddresses(e echo.Context) error {
 
 }
 
-// func AddAddress(e echo.Context) error {
-// 	var address models.Address
+func AddAddress(e echo.Context) error {
+	var address models.Address
 
-// 	if err := e.Bind(&address); err != nil {
-// 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
-// 	}
-// 	if err:=e.Validate(&address);err!=nil{
-// 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
-// 	}
+	if err := e.Bind(&address); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
+	}
+	if err:=e.Validate(&address);err!=nil{
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
+	}
 
-// }
+	db:=db.DB()
+
+	db.add
+
+	
+
+
+}
