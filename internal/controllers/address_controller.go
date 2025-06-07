@@ -98,15 +98,19 @@ func AddAddress(e echo.Context) error {
 	if err := e.Bind(&address); err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
 	}
-	if err:=e.Validate(&address);err!=nil{
+	if err := e.Validate(&address); err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid address input"))
 	}
 
-	db:=db.DB()
+	db := db.DB()
 
-	db.add
+	user := e.Get("user").(models.User)
 
-	
+	address.UserId = user.ID
 
+	if err := db.AddUserAddress(address); err != nil {
+		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
+	}
 
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("address updated successfully"))
 }
