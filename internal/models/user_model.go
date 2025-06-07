@@ -20,11 +20,11 @@ type User struct {
 
 type Address struct {
 	Id        int    `json:"id"`
-	Address   string `json:"address"`
-	City      string `json:"city"`
-	State     string `json:"state"`
-	Country   string `json:"country"`
-	ZipCode   string `json:"zip_code"`
+	Address   string `json:"address" validate:"required"`
+	City      string `json:"city" validate:"required"`
+	State     string `json:"state" validate:"required"`
+	Country   string `json:"country" validate:"required"`
+	ZipCode   string `json:"zip_code" validate:"required"`
 	UserId    int    `json:"user_id"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
