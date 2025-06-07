@@ -92,6 +92,18 @@ func GetAddresses(e echo.Context) error {
 
 }
 
+// AddAddress godoc
+// @Summary Add a new address for the authenticated user
+// @Description Adds a new address to the user's profile
+// @Tags address
+// @Accept json
+// @Produce json
+// @Param address body models.Address true "Address information"
+// @Success 200 {object} responsehandler.SuccessResponse "Success message with address updated confirmation"
+// @Failure 400 {object} errorhandler.ErrorHandler "Invalid address input"
+// @Failure 500 {object} errorhandler.ErrorHandler "Internal server error"
+// @Security ApiKeyAuth
+// @Router /address [post]
 func AddAddress(e echo.Context) error {
 	var address models.Address
 
