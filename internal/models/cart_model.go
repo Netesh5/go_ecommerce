@@ -27,6 +27,6 @@ type Order struct {
 
 type UpdateCartReq struct {
 	Id       int `json:"id" validate:"required"`
-	Product  int `json:"product_id" validate:"required`
+	Product  int `json:"product_id" validate:"required"`
 	Quantity int `json:"quantity" validate:"required"`
 }
