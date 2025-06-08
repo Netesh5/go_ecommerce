@@ -48,20 +48,20 @@ var Routes = Routers{
 	{
 		Name:       "AddProductToCart",
 		Method:     http.MethodPost,
-		Path:       "/cart",
+		Path:       "/cart/item",
 		HandleFunc: controllers.AddItemToCart,
 	},
 	{
 		Name:       "RemoveProductFromCart",
 		Method:     http.MethodDelete,
-		Path:       "/cart",
+		Path:       "/cart/item",
 		HandleFunc: controllers.RemoveItemFromCart,
 	},
 	{
 		Name:       "GetCartItems",
 		Method:     http.MethodGet,
 		Path:       "/cart",
-		HandleFunc: controllers.GetItemFromCart,
+		HandleFunc: controllers.GetItemsFromCart,
 	},
 
 	{

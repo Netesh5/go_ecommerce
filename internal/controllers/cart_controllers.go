@@ -23,7 +23,7 @@ import (
 // @Success 200 {object} responsehandler.SuccessResponse
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
-// @Router /cart [post]
+// @Router /cart/item [post]
 func AddItemToCart(e echo.Context) error {
 	postgres := db.DB()
 
@@ -68,7 +68,7 @@ func AddItemToCart(e echo.Context) error {
 // @Success 200 {object} responsehandler.SuccessResponse
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
-// @Router /cart [delete]
+// @Router /cart/item [delete]
 func RemoveItemFromCart(e echo.Context) error {
 	postgres := db.DB()
 	productId := e.Param("product_id")
@@ -107,7 +107,7 @@ func RemoveItemFromCart(e echo.Context) error {
 // @Failure 400 {object} errorhandler.ErrorHandler
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /cart [get]
-func GetItemFromCart(e echo.Context) error {
+func GetItemsFromCart(e echo.Context) error {
 	postgres := db.DB()
 	var cart models.Cart
 	err := e.Bind(&cart)
