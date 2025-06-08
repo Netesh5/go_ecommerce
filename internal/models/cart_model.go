@@ -24,3 +24,9 @@ type Order struct {
 	UpdatedAt   string  `json:"updated_at"`
 	DeletedAt   string  `json:"deleted_at"`
 }
+
+type UpdateCartReq struct {
+	Id       int `json:"id" validate:"required"`
+	Product  int `json:"product_id" validate:"required`
+	Quantity int `json:"quantity" validate:"required"`
+}

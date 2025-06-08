@@ -115,7 +115,7 @@ func GetItemFromCart(e echo.Context) error {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(err.Error()))
 	}
 
-	carts, err := postgres.GetItemFromCart(cart.ID)
+	carts, err := postgres.GetItemsFromCart(cart.ID)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
@@ -142,7 +142,7 @@ func BuyFromCart(e echo.Context) error {
 		return e.JSON(http.StatusBadRequest, errorhandler.NewErrorHandler(err.Error()))
 	}
 
-	carts, err := postgres.GetItemFromCart(cart.ID)
+	carts, err := postgres.GetItemsFromCart(cart.ID)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
@@ -154,4 +154,22 @@ func BuyFromCart(e echo.Context) error {
 
 	}
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("products purchased successfully"))
+}
+
+func UpdateCartItem(e echo.Context) error {
+	var updateReq models.UpdateCartReq
+
+	if err := e.Bind(&updateReq); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input"))
+	}
+	if err := e.Validate(&updateReq); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("required field are missing"))
+	}
+
+	user := e.Get("user").(models.User)
+	db := db.DB()
+	if err := db.UpdateCartItem(updateReq, user.ID); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("item update successfully"))
 }

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
@@ -49,7 +51,7 @@ func (db *Postgres) RemoveProductFromCart(productID int, userID int) error {
 	return nil
 }
 
-func (db *Postgres) GetItemFromCart(userID int) ([]models.Cart, error) {
+func (db *Postgres) GetItemsFromCart(userID int) ([]models.Cart, error) {
 	stmt, err := db.Db.Prepare(`SELECT * FROM cart WHERE user_id=$1`)
 	if err != nil {
 		return nil, err
@@ -101,4 +103,28 @@ func (db *Postgres) SearchProducts(query string) ([]models.Product, error) {
 	}
 
 	return products, nil
+}
+
+func (db *Postgres) GetItemFromCart(cardId int, productId int, userId int) error {
+	stmt, err := db.Db.Prepare(`SELECT * FROM cart WHERE id=$1,product_id=$2,user_id=$3`)
+	if err != nil {
+		return fmt.Errorf("no item found")
+	}
+	var cart models.Cart
+	res := stmt.QueryRow(cardId, productId, userId).Scan(&cart.ID, &cart.UserID, &cart.ProductID, &cart.Quantity, &cart.Price, &cart.Total, &cart.Checkout, &cart.CreatedAt, &cart.UpdatedAt, &cart.DeletedAt)
+	return res
+
+}
+
+func (db *Postgres) UpdateCartItem(updateReq models.UpdateCartReq, userId int) error {
+	stmt, err := db.Db.Prepare(`UPDATE cart set quantity=$1 WHERE id=$2,product_id=$3,user_id=$4`)
+	if err != nil {
+		return fmt.Errorf("no item found")
+	}
+	_, err = stmt.Exec(updateReq.Quantity, updateReq.Id, updateReq.Product, userId)
+	if err != nil {
+		return fmt.Errorf("couldn't update item")
+	}
+	return nil
+
 }
