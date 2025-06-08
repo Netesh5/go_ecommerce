@@ -156,6 +156,22 @@ func BuyFromCart(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("products purchased successfully"))
 }
 
+// UpdateCartItem handles updating items in a user's cart.
+//
+// It binds the request to models.UpdateCartReq, validates required fields,
+// and updates the cart item in the database for the authenticated user.
+//
+// @Summary Update an item in the user's cart
+// @Description Updates quantity or other attributes of an item in the user's cart
+// @Tags cart
+// @Accept json
+// @Produce json
+// @Param updateReq body models.UpdateCartReq true "Cart item update information"
+// @Success 200 {object} responsehandler.SuccessResponse "Item updated successfully"
+// @Failure 400 {object} errorhandler.ErrorHandler "Invalid input or required fields missing"
+// @Failure 401 {object} errorhandler.ErrorHandler "Unauthorized"
+// @Security BearerAuth
+// @Router /cart/item [put]
 func UpdateCartItem(e echo.Context) error {
 	var updateReq models.UpdateCartReq
 
