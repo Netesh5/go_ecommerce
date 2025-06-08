@@ -34,6 +34,8 @@ func main() {
 
 	services.CreateTwiiloClient(config.OtpConfig.AccountSID, config.OtpConfig.AuthToken, config.OtpConfig.ServiceSID)
 
+	services.InitCloudinary(config.CloudinaryConfig.CloudName, config.CloudinaryConfig.APIKey, config.CloudinaryConfig.APISecret)
+
 	router.RegisterRoutes(e, router.Routes, config.ApiVersion)
 	logrus.Info("Server is running on port", config.Server.Address)
 	e.Logger.Fatal(e.Start(config.Server.Address))

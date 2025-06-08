@@ -11,12 +11,13 @@ import (
 )
 
 type Config struct {
-	Env         string     `yaml:"env" env:"ENV" env-required:"true" env-default:"dev"` // Struct tags
-	StoragePath string     `yaml:"storage_path" env-requied:"true"`
-	Server      HttpServer `yaml:"http_server"`
-	ApiVersion  string     `yaml:"api_version" env:"API_VERSION" env-default:"v1"`
-	DbConfig    DBCOfig    `yaml:"db" env-required:"true"`
-	OtpConfig   OTPConfig  `env-required:"true"`
+	Env              string     `yaml:"env" env:"ENV" env-required:"true" env-default:"dev"` // Struct tags
+	StoragePath      string     `yaml:"storage_path" env-requied:"true"`
+	Server           HttpServer `yaml:"http_server"`
+	ApiVersion       string     `yaml:"api_version" env:"API_VERSION" env-default:"v1"`
+	DbConfig         DBCOfig    `yaml:"db" env-required:"true"`
+	OtpConfig        OTPConfig  `env-required:"true"`
+	CloudinaryConfig Cloudinary `env-required:"true"`
 }
 type HttpServer struct {
 	Address string
@@ -34,6 +35,12 @@ type OTPConfig struct {
 	AccountSID string
 	AuthToken  string
 	ServiceSID string
+}
+
+type Cloudinary struct {
+	CloudName string
+	APIKey    string
+	APISecret string
 }
 
 func LoadConfig() *Config {
@@ -68,6 +75,11 @@ func LoadConfig() *Config {
 	config.OtpConfig.AccountSID = os.Getenv("SENDGRID_ACCOUNT_SID")
 	config.OtpConfig.AuthToken = os.Getenv("SENDGRID_AUTH_TOKEN")
 	config.OtpConfig.ServiceSID = os.Getenv("SENDGRID_SERVICE_SID")
+
+	// Cloudinary
+	config.CloudinaryConfig.CloudName = os.Getenv("CLOUDINARY_NAME")
+	config.CloudinaryConfig.APIKey = os.Getenv("CLOUDINARY_API_KEY")
+	config.CloudinaryConfig.APISecret = os.Getenv("CLOUDINARY_API_SECRET")
 
 	if port, err := strconv.Atoi(os.Getenv("DB_PORT")); err == nil {
 		config.DbConfig.Port = port

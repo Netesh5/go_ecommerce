@@ -42,6 +42,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/cloudinary/cloudinary-go v1.7.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/jackc/pgx/v5 v5.7.5
