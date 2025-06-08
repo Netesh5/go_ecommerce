@@ -18,7 +18,7 @@ import (
 // @Security ApiKeyAuth
 // @Success 200 {object} responsehandler.SuccessResponse{data=models.GetUserResponse} "User data successfully retrieved"
 // @Failure 400 {object} responsehandler.ErrorHandler "Error retrieving user data"
-// @Router /user/getme [get]
+// @Router /user/get-me [get]
 func GetUser(e echo.Context) error {
 	user := e.Get("user").(models.User)
 

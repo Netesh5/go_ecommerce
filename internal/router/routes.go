@@ -115,7 +115,7 @@ var Routes = Routers{
 	{
 		Name:       "GetUser",
 		Method:     http.MethodGet,
-		Path:       "/user/getme",
+		Path:       "/user/get-me",
 		HandleFunc: controllers.GetUser,
 	},
 	{
