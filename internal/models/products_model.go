@@ -11,3 +11,11 @@ type Product struct {
 	CreatedAt   string  `json:"created_at"`
 	UpdatedAt   string  `json:"updated_at"`
 }
+
+type ProductReq struct {
+	Name        string  `json:"name" validate:"required"`
+	Description string  `json:"description" validate:"required"`
+	Price       float64 `json:"price" validate:"required"`
+	Stock       int     `json:"stock" validate:"required"`
+	Category    string  `json:"category" validate:"required"`
+}

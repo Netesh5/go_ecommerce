@@ -8,6 +8,8 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/db"
 	errorhandler "github.com/netesh5/go_ecommerce/internal/helper"
 	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
+	"github.com/netesh5/go_ecommerce/internal/models"
+	"github.com/netesh5/go_ecommerce/internal/services"
 )
 
 // SearchProduct godoc
@@ -66,4 +68,44 @@ func GetProductByID(e echo.Context) error {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
 	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(product, ""))
+}
+
+func AddProduct(e echo.Context) error {
+	var productReq models.ProductReq
+
+	if err := e.Bind(&productReq); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input request"))
+	}
+	if err := e.Validate(&productReq); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("required fields are missing"))
+	}
+
+	file, fileHeader, err := e.Request().FormFile("image")
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid file input"))
+	}
+	defer file.Close()
+
+	c := services.CloudinaryService{}
+	imgUrl, err := c.UploadImageToCloudinary(file, fileHeader)
+
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler("failed to upload image"))
+	}
+	product := models.Product{
+		Name:        productReq.Name,
+		Description: productReq.Description,
+		Price:       productReq.Price,
+		Category:    productReq.Category,
+		Stock:       productReq.Stock,
+		Image:       imgUrl,
+	}
+
+	db := db.DB()
+
+	if err := db.AddProduct(product); err != nil {
+		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product added successfully"))
 }
