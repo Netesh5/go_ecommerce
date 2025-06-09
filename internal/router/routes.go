@@ -130,4 +130,10 @@ var Routes = Routers{
 		Path:       "/user/password",
 		HandleFunc: controllers.UpdatePassword,
 	},
+	{
+		Name:       "AddProduct",
+		Method:     http.MethodPost,
+		Path:       "/products",
+		HandleFunc: controllers.AddProduct,
+	},
 }
