@@ -70,42 +70,84 @@ func GetProductByID(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(product, ""))
 }
 
-func AddProduct(e echo.Context) error {
-	var productReq models.ProductReq
+func AddProduct(c echo.Context) error {
+	// var productReq models.ProductReq
 
-	if err := e.Bind(&productReq); err != nil {
-		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input request"))
-	}
-	if err := e.Validate(&productReq); err != nil {
-		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("required fields are missing"))
+	// if err := e.Bind(&productReq); err != nil {
+	// 	return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input request"))
+	// }
+	// if err := e.Validate(&productReq); err != nil {
+	// 	return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("required fields are missing"))
+	// }
+
+	// file, fileHeader, err := e.Request().FormFile("image")
+	// if err != nil {
+	// 	return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid file input"))
+	// }
+	// defer file.Close()
+
+	// c := services.CloudinaryService{}
+	// imgUrl, err := c.UploadImageToCloudinary(file, fileHeader)
+
+	// if err != nil {
+	// 	return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler("failed to upload image"))
+	// }
+	// product := models.Product{
+	// 	Name:        productReq.Name,
+	// 	Description: productReq.Description,
+	// 	Price:       productReq.Price,
+	// 	Category:    productReq.Category,
+	// 	Stock:       productReq.Stock,
+	// 	Image:       imgUrl,
+	// }
+
+	// db := db.DB()
+
+	// if err := db.AddProduct(product); err != nil {
+	// 	return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
+	// }
+
+	// return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product added successfully"))
+
+	price, _ := strconv.ParseFloat(c.FormValue("price"), 64)
+	stock, _ := strconv.Atoi(c.FormValue("stock"))
+
+	// Manual validation can be done here too if needed
+	name := c.FormValue("name")
+	description := c.FormValue("description")
+	category := c.FormValue("category")
+
+	if name == "" || price == 0 || category == "" {
+		return c.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("required fields are missing"))
 	}
 
-	file, fileHeader, err := e.Request().FormFile("image")
+	// Handle file
+	file, fileHeader, err := c.Request().FormFile("image")
 	if err != nil {
-		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid file input"))
+		return c.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid file input"))
 	}
 	defer file.Close()
 
-	c := services.CloudinaryService{}
-	imgUrl, err := c.UploadImageToCloudinary(file, fileHeader)
-
+	// Upload image
+	cloud := services.CloudinaryService{}
+	imgURL, err := cloud.UploadImageToCloudinary(file, fileHeader)
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler("failed to upload image"))
+		return c.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
 	}
+
 	product := models.Product{
-		Name:        productReq.Name,
-		Description: productReq.Description,
-		Price:       productReq.Price,
-		Category:    productReq.Category,
-		Stock:       productReq.Stock,
-		Image:       imgUrl,
+		Name:        name,
+		Description: description,
+		Price:       price,
+		Category:    category,
+		Stock:       stock,
+		Image:       imgURL,
 	}
 
-	db := db.DB()
-
-	if err := db.AddProduct(product); err != nil {
-		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
+	if err := db.DB().AddProduct(product); err != nil {
+		return c.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
 	}
 
-	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product added successfully"))
+	return c.JSON(http.StatusCreated, responsehandler.SuccessMessage("product added successfully"))
+
 }
