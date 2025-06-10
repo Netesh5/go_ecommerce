@@ -18,4 +18,5 @@ type ProductReq struct {
 	Price       float64 `json:"price" validate:"required"`
 	Stock       int     `json:"stock" validate:"required"`
 	Category    string  `json:"category" validate:"required"`
+	Image       string  `json:"image" validate:"required"`
 }
