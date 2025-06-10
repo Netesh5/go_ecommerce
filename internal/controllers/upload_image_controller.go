@@ -11,7 +11,7 @@ import (
 func UploadImage(e echo.Context) error {
 	file, fileHeader, err := e.Request().FormFile("image")
 	if err != nil {
-		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid file input"))
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
 	}
 	defer file.Close()
 
