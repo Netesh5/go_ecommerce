@@ -13,6 +13,7 @@ func UploadImage(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
 	}
+
 	defer file.Close()
 
 	cloud := services.CloudinaryService{}
