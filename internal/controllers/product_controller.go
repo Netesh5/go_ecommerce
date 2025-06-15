@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/netesh5/go_ecommerce/internal/db"
@@ -85,6 +86,8 @@ func AddProduct(e echo.Context) error {
 		Category:    productReq.Category,
 		Stock:       productReq.Stock,
 		Image:       productReq.Image,
+		CreatedAt:   time.Now().UTC(),
+		UpdatedAt:   time.Now().UTC(),
 	}
 
 	db := db.DB()

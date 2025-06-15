@@ -63,15 +63,15 @@ func (db *Postgres) GetAllProducts() ([]models.Product, error) {
 }
 
 func (db *Postgres) AddProduct(product models.Product) error {
-	stmt, err := db.Db.Prepare(`INSERT INTO products (name,description,price,image,stock,category)
-	VALUES ($1,$2,$3,$4,$5,$6)
+	stmt, err := db.Db.Prepare(`INSERT INTO products (name,description,price,image,stock,category,created_at,updated_at)
+	VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
 	`)
 
 	if err != nil {
 		return fmt.Errorf("failed to create product")
 	}
 
-	_, err = stmt.Exec(&product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category)
+	_, err = stmt.Exec(&product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to create product")
 	}
