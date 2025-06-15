@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	responsehandler "github.com/netesh5/go_ecommerce/internal/helper"
+	"github.com/netesh5/go_ecommerce/internal/models"
 	"github.com/netesh5/go_ecommerce/internal/services"
 )
 
@@ -20,5 +21,8 @@ func UploadImage(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusOK, responsehandler.SuccessWithData("", imgURL))
+	imageRes := models.ImageResponse{
+		ImageUrl: imgURL,
+	}
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(imageRes, ""))
 }

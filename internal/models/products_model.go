@@ -20,3 +20,7 @@ type ProductReq struct {
 	Category    string  `json:"category" validate:"required"`
 	Image       string  `json:"image" validate:"required"`
 }
+
+type ImageResponse struct {
+	ImageUrl string `json:"img_url"`
+}
