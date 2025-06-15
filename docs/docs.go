@@ -676,50 +676,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/images/upload": {
-            "post": {
-                "description": "Receives an image file from form data and uploads it to Cloudinary",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "images"
-                ],
-                "summary": "Upload an image to Cloudinary",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "Image file to upload",
-                        "name": "image",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns the URL of the uploaded image",
-                        "schema": {
-                            "$ref": "#/definitions/models.ImageResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request or missing file",
-                        "schema": {
-                            "$ref": "#/definitions/responsehandler.ErrorHandler"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error during upload",
-                        "schema": {
-                            "$ref": "#/definitions/responsehandler.ErrorHandler"
-                        }
-                    }
-                }
-            }
-        },
         "/login": {
             "post": {
                 "description": "User login",
@@ -920,6 +876,50 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    }
+                }
+            }
+        },
+        "/put-image": {
+            "post": {
+                "description": "Receives an image file from form data and uploads it to Cloudinary",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "Upload an image to Cloudinary",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Image file to upload",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the URL of the uploaded image",
+                        "schema": {
+                            "$ref": "#/definitions/models.ImageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or missing file",
+                        "schema": {
+                            "$ref": "#/definitions/responsehandler.ErrorHandler"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error during upload",
                         "schema": {
                             "$ref": "#/definitions/responsehandler.ErrorHandler"
                         }

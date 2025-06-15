@@ -707,35 +707,6 @@ paths:
       summary: Update an item in the user's cart
       tags:
       - cart
-  /images/upload:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Receives an image file from form data and uploads it to Cloudinary
-      parameters:
-      - description: Image file to upload
-        in: formData
-        name: image
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Returns the URL of the uploaded image
-          schema:
-            $ref: '#/definitions/models.ImageResponse'
-        "400":
-          description: Invalid request or missing file
-          schema:
-            $ref: '#/definitions/responsehandler.ErrorHandler'
-        "500":
-          description: Server error during upload
-          schema:
-            $ref: '#/definitions/responsehandler.ErrorHandler'
-      summary: Upload an image to Cloudinary
-      tags:
-      - images
   /login:
     post:
       consumes:
@@ -863,6 +834,35 @@ paths:
       summary: Get product by ID
       tags:
       - products
+  /put-image:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Receives an image file from form data and uploads it to Cloudinary
+      parameters:
+      - description: Image file to upload
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns the URL of the uploaded image
+          schema:
+            $ref: '#/definitions/models.ImageResponse'
+        "400":
+          description: Invalid request or missing file
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+        "500":
+          description: Server error during upload
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      summary: Upload an image to Cloudinary
+      tags:
+      - images
   /signup:
     post:
       consumes:
