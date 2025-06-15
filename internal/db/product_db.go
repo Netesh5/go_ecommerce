@@ -68,12 +68,14 @@ func (db *Postgres) AddProduct(product models.Product) error {
 	`)
 
 	if err != nil {
-		return fmt.Errorf("failed to create product")
+		// return fmt.Errorf("failed to create product")
+		return err
 	}
 
 	_, err = stmt.Exec(&product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt)
 	if err != nil {
-		return fmt.Errorf("failed to create product")
+		// return fmt.Errorf("failed to create product")
+		return err
 	}
 
 	return nil

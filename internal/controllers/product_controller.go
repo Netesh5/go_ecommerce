@@ -70,6 +70,17 @@ func GetProductByID(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(product, ""))
 }
 
+// AddProduct godoc
+// @Summary Add a new product
+// @Description Creates a new product in the database
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param product body models.ProductReq true "Product information"
+// @Success 201 {object} responsehandler.SuccessResponse "Product added successfully"
+// @Failure 400 {object} responsehandler.ErrorHandler "Invalid input request or required fields are missing"
+// @Failure 500 {object} responsehandler.ErrorHandler "Internal server error"
+// @Router /products [post]
 func AddProduct(e echo.Context) error {
 	var productReq models.ProductReq
 
