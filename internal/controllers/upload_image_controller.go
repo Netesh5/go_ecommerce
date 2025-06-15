@@ -17,7 +17,7 @@ import (
 // @Accept mpfd
 // @Produce json
 // @Param image formData file true "Image file to upload"
-// @Success 200 {object} models.ImageResponse "Returns the URL of the uploaded image"
+// @Success 200 {object} responsehandler.SuccessResponse{data=models.ImageResponse}  "Returns the URL of the uploaded image"
 // @Failure 400 {object} responsehandler.ErrorHandler "Invalid request or missing file"
 // @Failure 500 {object} responsehandler.ErrorHandler "Server error during upload"
 // @Router /put-image [post]

@@ -851,7 +851,12 @@ paths:
         "200":
           description: Returns the URL of the uploaded image
           schema:
-            $ref: '#/definitions/models.ImageResponse'
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.ImageResponse'
+              type: object
         "400":
           description: Invalid request or missing file
           schema:

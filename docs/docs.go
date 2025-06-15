@@ -909,7 +909,19 @@ const docTemplate = `{
                     "200": {
                         "description": "Returns the URL of the uploaded image",
                         "schema": {
-                            "$ref": "#/definitions/models.ImageResponse"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsehandler.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.ImageResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
