@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 	"mime/multipart"
 
 	"github.com/cloudinary/cloudinary-go"
@@ -15,8 +16,11 @@ type CloudinaryService struct {
 	APISecret string
 }
 
-func InitCloudinary(cloudName, apiKey, apiSecret string) *CloudinaryService {
-	return &CloudinaryService{
+var cloudinaryService *CloudinaryService
+
+func InitCloudinary(cloudName, apiKey, apiSecret string) {
+	log.Println("CloudName: ", cloudName)
+	cloudinaryService = &CloudinaryService{
 		CloudName: cloudName,
 		APIKey:    apiKey,
 		APISecret: apiSecret,
@@ -24,13 +28,12 @@ func InitCloudinary(cloudName, apiKey, apiSecret string) *CloudinaryService {
 }
 
 // UploadImageToCloudinary uploads an image to cloudinary and returns the secure URL
-func (s *CloudinaryService) UploadImageToCloudinary(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
-
-	cld, err := cloudinary.NewFromParams(s.CloudName, s.APIKey, s.APISecret)
+func UploadImageToCloudinary(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
+	log.Println("CloudName: ", cloudinaryService.CloudName)
+	cld, err := cloudinary.NewFromParams(cloudinaryService.CloudName, cloudinaryService.APIKey, cloudinaryService.APISecret)
 	if err != nil {
 		return "", err
 	}
-
 	ctx := context.Background()
 	uploadResult, err := cld.Upload.Upload(ctx, file, uploader.UploadParams{
 		PublicID: fileHeader.Filename,

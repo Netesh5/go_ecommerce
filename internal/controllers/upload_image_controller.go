@@ -16,10 +16,9 @@ func UploadImage(e echo.Context) error {
 
 	defer file.Close()
 
-	cloud := services.CloudinaryService{}
-	imgURL, err := cloud.UploadImageToCloudinary(file, fileHeader)
-	// if err != nil {
-	// 	return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
-	// }
-	return e.JSON(http.StatusOK, responsehandler.SuccessWithData("Image uploaded successfully", imgURL))
+	imgURL, err := services.UploadImageToCloudinary(file, fileHeader)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
+	}
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData("", imgURL))
 }
