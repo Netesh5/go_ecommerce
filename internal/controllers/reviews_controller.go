@@ -58,7 +58,7 @@ func AddReview(e echo.Context) error {
 		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
 	}
 
-	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product review added successfully"))
+	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("product review added successfully"))
 
 }
 
@@ -87,5 +87,5 @@ func GetReviews(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusBadRequest, responsehandler.SuccessWithData(res, ""))
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(res, ""))
 }
