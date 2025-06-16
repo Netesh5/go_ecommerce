@@ -1101,4 +1101,59 @@ paths:
       summary: Update user password
       tags:
       - users
+  /wishlist:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all products in the authenticated user's wishlist
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved wishlist products
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsehandler.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Product'
+                  type: array
+              type: object
+        "400":
+          description: Error retrieving wishlist
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user's wishlist products
+      tags:
+      - wishlist
+  /wishlist/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Add a product to the authenticated user's wishlist
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product added to wishlist
+          schema:
+            $ref: '#/definitions/responsehandler.SuccessResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/responsehandler.ErrorHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a product to the user's wishlist
+      tags:
+      - wishlist
 swagger: "2.0"

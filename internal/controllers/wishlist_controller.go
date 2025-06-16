@@ -11,6 +11,17 @@ import (
 	"github.com/netesh5/go_ecommerce/internal/models"
 )
 
+// AddProductToWishList godoc
+// @Summary Add a product to the user's wishlist
+// @Description Add a product to the authenticated user's wishlist
+// @Tags wishlist
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} responsehandler.SuccessResponse "Product added to wishlist"
+// @Failure 400 {object} responsehandler.ErrorHandler "Bad request"
+// @Router /wishlist/{id} [post]
 func AddProductToWishList(e echo.Context) error {
 	productParam := e.Param("id")
 	if productParam == "" {
@@ -41,6 +52,16 @@ func AddProductToWishList(e echo.Context) error {
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("product added to wishlist"))
 }
 
+// GetUserWishlist godoc
+// @Summary Get user's wishlist products
+// @Description Retrieves all products in the authenticated user's wishlist
+// @Tags wishlist
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} responsehandler.SuccessResponse{data=[]models.Product} "Successfully retrieved wishlist products"
+// @Failure 400 {object} responsehandler.ErrorHandler "Error retrieving wishlist"
+// @Router /wishlist [get]
 func GetUserWishlist(e echo.Context) error {
 	userID := e.Get("user").(models.User)
 
