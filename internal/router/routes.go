@@ -154,4 +154,16 @@ var Routes = Routers{
 		Path:       "/products/:id/reviews",
 		HandleFunc: controllers.GetReviews,
 	},
+	{
+		Name:       "AddWishlist",
+		Method:     http.MethodPost,
+		Path:       "/wishlist/:id",
+		HandleFunc: controllers.AddProductToWishList,
+	},
+	{
+		Name:       "GetWishlist",
+		Method:     http.MethodGet,
+		Path:       "/wishlist",
+		HandleFunc: controllers.GetUserWishlist,
+	},
 }
