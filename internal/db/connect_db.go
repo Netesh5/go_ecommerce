@@ -80,6 +80,16 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		FOREIGN KEY(user_id) REFERENCES users(id),
 		FOREIGN KEY(product_id) REFERENCES products(id)
 	);
+
+	CREATE TABLE IF NOT EXISTS reviews(
+		id SERIAL PRIMARY KEY
+		user_id INTEGER REFERENCES users(id)
+		product_id INTEGER REFERENCES products(id)
+		rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5)
+		comment TEXT
+		created_at TIMESTAMP DEFAULT current_date
+		updated_at TIMESTAMP DEFAULT current_date
+	);
 		`)
 
 	if dbErr != nil {

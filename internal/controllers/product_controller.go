@@ -111,6 +111,24 @@ func AddProduct(e echo.Context) error {
 
 }
 
-func AddReview() error {
+func AddReview(e echo.Context) error {
+	var reviewReq models.ReviewRequest
+	if err := e.Bind(&reviewReq); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input request"))
+	}
+	if err := e.Validate(&reviewReq); err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("required fields are missing"))
+	}
+	db := db.DB()
 
+	user := e.Get("user").(models.User)
+
+	review := models.Review{
+		UserID:    user.ID,
+		ProductID: reviewReq.ProductID,
+		Rating:    reviewReq.Rating,
+		Comment:   reviewReq.Comment,
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+	}
 }
