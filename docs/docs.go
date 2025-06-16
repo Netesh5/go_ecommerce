@@ -1163,6 +1163,29 @@ const docTemplate = `{
                 }
             }
         },
+        "models.AddressUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "zip_code": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Cart": {
             "type": "object",
             "required": [
@@ -1480,7 +1503,7 @@ const docTemplate = `{
                 "address": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Address"
+                        "$ref": "#/definitions/models.AddressUpdateRequest"
                     }
                 },
                 "email": {

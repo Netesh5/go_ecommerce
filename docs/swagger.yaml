@@ -27,6 +27,21 @@ definitions:
     - street
     - zip_code
     type: object
+  models.AddressUpdateRequest:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      id:
+        type: integer
+      state:
+        type: string
+      street:
+        type: string
+      zip_code:
+        type: string
+    type: object
   models.Cart:
     properties:
       checkout:
@@ -243,7 +258,7 @@ definitions:
     properties:
       address:
         items:
-          $ref: '#/definitions/models.Address'
+          $ref: '#/definitions/models.AddressUpdateRequest'
         type: array
       email:
         type: string
