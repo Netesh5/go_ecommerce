@@ -163,7 +163,7 @@ var Routes = Routers{
 	{
 		Name:       "GetWishlist",
 		Method:     http.MethodGet,
-		Path:       "/wishlist",
+		Path:       "/wishlists",
 		HandleFunc: controllers.GetUserWishlist,
 	},
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func (db *Postgres) GetProductByID(id int) (models.Product, error) {
-	stmt, err := db.Db.Prepare("SELECT * from product WHERE id=$1")
+	stmt, err := db.Db.Prepare("SELECT * from products WHERE id=$1")
 	if err != nil {
 		return models.Product{}, err
 	}

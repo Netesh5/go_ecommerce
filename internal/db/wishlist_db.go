@@ -3,7 +3,7 @@ package db
 import "github.com/netesh5/go_ecommerce/internal/models"
 
 func (db *Postgres) AddProductToWishList(wishlist models.Wishlists) error {
-	stmt, err := db.Db.Prepare(`INSERT INTO TABLE (user_id,product_id,created_at,updated_at)VALUES ($1,$2,$3,$4)`)
+	stmt, err := db.Db.Prepare(`INSERT INTO wishlists (user_id,product_id,created_at,updated_at)VALUES ($1,$2,$3,$4)`)
 	if err != nil {
 		return err
 	}
@@ -16,7 +16,7 @@ func (db *Postgres) AddProductToWishList(wishlist models.Wishlists) error {
 }
 
 func (db *Postgres) GetUserWishlistProducts(userId int) ([]models.Wishlists, error) {
-	stmt, err := db.Db.Prepare(`SELECT * FROM wishlist WHERE user_id=$1`)
+	stmt, err := db.Db.Prepare(`SELECT * FROM wishlists WHERE user_id=$1`)
 	if err != nil {
 		return []models.Wishlists{}, err
 	}
