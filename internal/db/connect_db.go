@@ -91,6 +91,13 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		updated_at TIMESTAMP DEFAULT current_date
 	);
 
+	CREATE TABLE wishlists (
+		id SERIAL PRIMARY KEY,
+		user_id INTEGER REFERENCES users(id),
+		product_id INTEGER REFERENCES products(id),
+		created_at TIMESTAMP DEFAULT NOW(),
+		UNIQUE (user_id, product_id)
+	);
 
 		`)
 
