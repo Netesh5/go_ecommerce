@@ -148,4 +148,10 @@ var Routes = Routers{
 		Path:       "/products/:id/review",
 		HandleFunc: controllers.AddReview,
 	},
+	{
+		Name:       "GetRevies",
+		Method:     http.MethodGet,
+		Path:       "/products/:id/reviews",
+		HandleFunc: controllers.AddReview,
+	},
 }

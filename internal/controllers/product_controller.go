@@ -148,3 +148,20 @@ func AddReview(e echo.Context) error {
 	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product review added successfully"))
 
 }
+
+func GetReviews(e echo.Context) error {
+	productIDParams := e.Param("id")
+	if productIDParams == "" {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("product id is required"))
+	}
+	productID, err := strconv.Atoi(productIDParams)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid product id"))
+	}
+	db := db.DB()
+	res, err := db.GetProductReviews(productID)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+	return e.JSON(http.StatusBadRequest, responsehandler.SuccessWithData(res, ""))
+}

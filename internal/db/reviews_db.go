@@ -21,3 +21,26 @@ func (db *Postgres) AddReview(review models.Review) error {
 	}
 	return nil
 }
+
+func (db *Postgres) GetProductReviews(productId int) ([]models.Review, error) {
+	stmt, err := db.Db.Prepare(`SELECT * FROM reviews WHERE product_id=$1`)
+	if err != nil {
+		return []models.Review{}, err
+	}
+	reviews := []models.Review{}
+	defer stmt.Close()
+	res, err := stmt.Query(productId)
+	if err != nil {
+		return []models.Review{}, err
+	}
+
+	for res.Next() {
+		var review models.Review
+		if err := res.Scan(&review.Id, &review.ProductID, &review.UserID, &review.Rating, &review.Comment, &review.CreatedAt, &review.UpdatedAt); err != nil {
+			return []models.Review{}, err
+		}
+
+		reviews = append(reviews, review)
+	}
+	return reviews, nil
+}
