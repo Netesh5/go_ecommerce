@@ -40,3 +40,26 @@ func AddProductToWishList(e echo.Context) error {
 	}
 	return e.JSON(http.StatusOK, responsehandler.SuccessMessage("product added to wishlist"))
 }
+
+func GetUserWishlist(e echo.Context) error {
+	userID := e.Get("user").(models.User)
+
+	db := db.DB()
+
+	wishlists, err := db.GetUserWishlistProducts(userID.ID)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	var products []models.Product
+
+	for _, wishlist := range wishlists {
+		product, err := db.GetProductByID(wishlist.ProductId)
+		if err != nil {
+			continue
+		}
+		products = append(products, product)
+	}
+
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(products, ""))
+}
