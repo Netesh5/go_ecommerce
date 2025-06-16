@@ -29,6 +29,14 @@ type Address struct {
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }
+type AddressUpdateRequest struct {
+	Id      int    `json:"id"`
+	Street  string `json:"street"`
+	City    string `json:"city"`
+	State   string `json:"state"`
+	Country string `json:"country"`
+	ZipCode string `json:"zip_code"`
+}
 
 type UserLogin struct {
 	Email    string
@@ -66,9 +74,9 @@ type UserRequest struct {
 }
 
 type UserUpdate struct {
-	ID      int       `json:"id"`
-	Name    string    `json:"name"`
-	Email   string    `json:"email"`
-	Phone   string    `json:"phone"`
-	Address []Address `json:"address"`
+	ID      int                    `json:"id"`
+	Name    string                 `json:"name"`
+	Email   string                 `json:"email"`
+	Phone   string                 `json:"phone"`
+	Address []AddressUpdateRequest `json:"address"`
 }

@@ -81,6 +81,7 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		FOREIGN KEY(product_id) REFERENCES products(id)
 	);
 		`)
+
 	if dbErr != nil {
 		log.Fatalln(dbErr.Error())
 	}
