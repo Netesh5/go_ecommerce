@@ -113,6 +113,15 @@ func AddProduct(e echo.Context) error {
 
 func AddReview(e echo.Context) error {
 	var reviewReq models.ReviewRequest
+	productIDParams := e.Param("id")
+	if productIDParams == "" {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("product id is required"))
+	}
+	productID, err := strconv.Atoi(productIDParams)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid product id"))
+	}
+
 	if err := e.Bind(&reviewReq); err != nil {
 		return e.JSON(http.StatusBadRequest, responsehandler.NewErrorHandler("invalid input request"))
 	}
@@ -125,7 +134,7 @@ func AddReview(e echo.Context) error {
 
 	review := models.Review{
 		UserID:    user.ID,
-		ProductID: reviewReq.ProductID,
+		ProductID: productID,
 		Rating:    reviewReq.Rating,
 		Comment:   reviewReq.Comment,
 		CreatedAt: time.Now().UTC(),

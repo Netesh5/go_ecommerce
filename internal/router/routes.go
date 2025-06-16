@@ -142,4 +142,10 @@ var Routes = Routers{
 		Path:       "/put-image",
 		HandleFunc: controllers.UploadImage,
 	},
+	{
+		Name:       "AddReview",
+		Method:     http.MethodPost,
+		Path:       "/products/:id/review",
+		HandleFunc: controllers.AddReview,
+	},
 }
