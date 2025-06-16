@@ -110,3 +110,7 @@ func AddProduct(e echo.Context) error {
 	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product added successfully"))
 
 }
+
+func AddReview() error {
+
+}
