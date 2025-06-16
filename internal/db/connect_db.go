@@ -95,7 +95,8 @@ func ConnectDB(cfg *config.Config) (*Postgres, error) {
 		id SERIAL PRIMARY KEY,
 		user_id INTEGER REFERENCES users(id),
 		product_id INTEGER REFERENCES products(id),
-		created_at TIMESTAMP DEFAULT NOW(),
+		created_at TIMESTAMP DEFAULT current_date,
+		updated_at TIMESTAMP DEFAULT current_date,
 		UNIQUE (user_id, product_id)
 	);
 
