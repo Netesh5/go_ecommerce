@@ -131,4 +131,11 @@ func AddReview(e echo.Context) error {
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
+
+	if err := db.AddReview(review); err != nil {
+		return e.JSON(http.StatusInternalServerError, responsehandler.NewErrorHandler(err.Error()))
+	}
+
+	return e.JSON(http.StatusCreated, responsehandler.SuccessMessage("product review added successfully"))
+
 }
