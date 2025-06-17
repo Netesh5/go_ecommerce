@@ -79,14 +79,14 @@ func (db *Postgres) GetItemsFromCart(userID int) ([]models.Cart, error) {
 func (db *Postgres) SearchProducts(query string, limit int, offset int) ([]models.Product, error) {
 	stmt, err := db.Db.Prepare(`SELECT * FROM products WHERE name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%' LIMIT $2 OFFSET $3`)
 	if err != nil {
-		return nil, err
+		return []models.Product{}, err
 	}
 	defer stmt.Close()
 
 	var products []models.Product
 	res, err := stmt.Query(query, limit, offset)
 	if err != nil {
-		return nil, err
+		return []models.Product{}, err
 	}
 	defer res.Close()
 
@@ -99,7 +99,7 @@ func (db *Postgres) SearchProducts(query string, limit int, offset int) ([]model
 	}
 
 	if err := res.Err(); err != nil {
-		return nil, err
+		return []models.Product{}, err
 	}
 
 	return products, nil
