@@ -93,7 +93,7 @@ func (db *Postgres) SearchProducts(query string, limit int, offset int) ([]model
 	for res.Next() {
 		var product models.Product
 		if err := res.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Image, &product.Stock, &product.Category, &product.CreatedAt, &product.UpdatedAt); err != nil {
-			return nil, err
+			return []models.Product{}, err
 		}
 		products = append(products, product)
 	}
