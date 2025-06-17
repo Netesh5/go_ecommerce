@@ -111,6 +111,15 @@ definitions:
     required:
     - email
     type: object
+  models.Pagination:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
   models.Product:
     properties:
       category:
@@ -320,6 +329,8 @@ definitions:
       data: {}
       message:
         type: string
+      pagination:
+        $ref: '#/definitions/models.Pagination'
       success:
         type: boolean
     type: object
@@ -788,17 +799,25 @@ paths:
     get:
       consumes:
       - application/json
-      description: Search products by query (optional)
+      description: Search products by query with pagination support
       parameters:
-      - description: query string for searching products
+      - description: Query string for searching products
         in: query
         name: query
         type: string
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of items per page (default: 10)'
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: List of products
+          description: List of products with pagination
           schema:
             allOf:
             - $ref: '#/definitions/responsehandler.SuccessResponse'
@@ -807,6 +826,8 @@ paths:
                   items:
                     $ref: '#/definitions/models.Product'
                   type: array
+                pagination:
+                  $ref: '#/definitions/models.Pagination'
               type: object
         "500":
           description: Internal Server Error

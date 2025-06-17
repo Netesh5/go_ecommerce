@@ -14,12 +14,14 @@ import (
 
 // SearchProduct godoc
 // @Summary Get Products / Search products
-// @Description Search products by query (optional)
+// @Description Search products by query with pagination support
 // @Tags products
-// @Accept  json
-// @Produce  json
-// @Param query query string false "query string for searching products"
-// @Success 200 {object} responsehandler.SuccessResponse{data=[]models.Product} "List of products"
+// @Accept json
+// @Produce json
+// @Param query query string false "Query string for searching products"
+// @Param page query integer false "Page number (default: 1)"
+// @Param limit query integer false "Number of items per page (default: 10)"
+// @Success 200 {object} responsehandler.SuccessResponse{data=[]models.Product,pagination=models.Pagination} "List of products with pagination"
 // @Failure 500 {object} errorhandler.ErrorHandler
 // @Router /products [get]
 func SearchProducts(e echo.Context) error {

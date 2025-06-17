@@ -733,7 +733,7 @@ const docTemplate = `{
         },
         "/products": {
             "get": {
-                "description": "Search products by query (optional)",
+                "description": "Search products by query with pagination support",
                 "consumes": [
                     "application/json"
                 ],
@@ -747,14 +747,26 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "query string for searching products",
+                        "description": "Query string for searching products",
                         "name": "query",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page (default: 10)",
+                        "name": "limit",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of products",
+                        "description": "List of products with pagination",
                         "schema": {
                             "allOf": [
                                 {
@@ -768,6 +780,9 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/models.Product"
                                             }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/definitions/models.Pagination"
                                         }
                                     }
                                 }
@@ -1497,6 +1512,20 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Pagination": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Product": {
             "type": "object",
             "properties": {
@@ -1802,6 +1831,9 @@ const docTemplate = `{
                 "data": {},
                 "message": {
                     "type": "string"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/models.Pagination"
                 },
                 "success": {
                     "type": "boolean"
