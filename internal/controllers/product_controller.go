@@ -24,21 +24,45 @@ import (
 // @Router /products [get]
 func SearchProducts(e echo.Context) error {
 	postgres := db.DB()
-	query := e.QueryParam("query")
-	if query == "" {
-		products, err := postgres.GetAllProducts()
-		if err != nil {
-			return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
-		}
-		return e.JSON(http.StatusOK, responsehandler.SuccessWithData(products, ""))
 
+	pageParam := e.QueryParam("page")
+	page, err := strconv.Atoi(pageParam)
+	if err != nil || page < 1 {
+		page = 1
 	}
 
-	products, err := postgres.SearchProducts(query)
+	limitParam := e.QueryParam("limit")
+	limit, err := strconv.Atoi(limitParam)
+	if err != nil || page < 1 {
+		limit = 10
+	}
+	offset := (page - 1) * limit
+	total, err := postgres.GetProductCount()
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
 	}
-	return e.JSON(http.StatusOK, responsehandler.SuccessWithData(products, ""))
+	query := e.QueryParam("query")
+	if query == "" {
+		products, err := postgres.GetAllProducts(limit, offset)
+		if err != nil {
+			return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+		}
+		return e.JSON(http.StatusOK, responsehandler.SuccessWithPaginatedData(products, models.Pagination{
+			Page:  page,
+			Limit: limit,
+			Total: total,
+		}, ""))
+
+	}
+	products, err := postgres.SearchProducts(query, limit, offset)
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, errorhandler.NewErrorHandler(err.Error()))
+	}
+	return e.JSON(http.StatusOK, responsehandler.SuccessWithPaginatedData(products, models.Pagination{
+		Page:  page,
+		Limit: limit,
+		Total: total,
+	}, ""))
 }
 
 // GetProductByID godoc

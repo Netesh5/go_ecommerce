@@ -76,15 +76,15 @@ func (db *Postgres) GetItemsFromCart(userID int) ([]models.Cart, error) {
 
 }
 
-func (db *Postgres) SearchProducts(query string) ([]models.Product, error) {
-	stmt, err := db.Db.Prepare(`SELECT * FROM products WHERE name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%'`)
+func (db *Postgres) SearchProducts(query string, limit int, offset int) ([]models.Product, error) {
+	stmt, err := db.Db.Prepare(`SELECT * FROM products WHERE name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%' LIMIT $2 OFFSET $3`)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
 	var products []models.Product
-	res, err := stmt.Query(query)
+	res, err := stmt.Query(query, limit, offset)
 	if err != nil {
 		return nil, err
 	}

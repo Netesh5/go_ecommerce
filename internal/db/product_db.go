@@ -33,15 +33,15 @@ func (db *Postgres) GetProductByID(id int) (models.Product, error) {
 	return product, nil
 }
 
-func (db *Postgres) GetAllProducts() ([]models.Product, error) {
-	stmt, err := db.Db.Prepare(`SELECT * FROM products`)
+func (db *Postgres) GetAllProducts(limit int, offset int) ([]models.Product, error) {
+	stmt, err := db.Db.Prepare(`SELECT * FROM products LIMIT $1 OFFSET $2`)
 	if err != nil {
 		return nil, err
 	}
 
 	defer stmt.Close()
 	products := []models.Product{}
-	res, err := stmt.Query()
+	res, err := stmt.Query(limit, offset)
 
 	if err != nil {
 		return nil, err
@@ -79,4 +79,13 @@ func (db *Postgres) AddProduct(product models.Product) error {
 	}
 
 	return nil
+}
+
+func (db *Postgres) GetProductCount() (int, error) {
+	var count int
+	err := db.Db.QueryRow("SELECT COUNT(*) FROM products").Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
