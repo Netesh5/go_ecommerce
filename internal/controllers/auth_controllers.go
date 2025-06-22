@@ -94,7 +94,7 @@ func HashPassword(password string) (string, error) {
 // @Accept  json
 // @Produce  json
 // @Param login body models.UserLogin true "Login object"
-// @Success 200 {object} responsehandler.SuccessResponse{data=models.User} "User Response"
+// @Success 200 {object} responsehandler.SuccessResponse{data=models.UserResponse} "User Response"
 // @Failure 400 {object} map[string]string
 // @Router /login [post]
 func Login(e echo.Context) error {

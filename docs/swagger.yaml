@@ -231,41 +231,6 @@ definitions:
     - current_password
     - new_password
     type: object
-  models.User:
-    properties:
-      address:
-        items:
-          $ref: '#/definitions/models.Address'
-        type: array
-      created_at:
-        type: string
-      email:
-        type: string
-      id:
-        type: integer
-      is_verified:
-        type: boolean
-      name:
-        maxLength: 30
-        minLength: 2
-        type: string
-      password:
-        minLength: 6
-        type: string
-      phone:
-        type: string
-      refresh_token:
-        type: string
-      token:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - email
-    - name
-    - password
-    - phone
-    type: object
   models.UserLogin:
     properties:
       email:
@@ -291,6 +256,31 @@ definitions:
     - name
     - password
     - phone
+    type: object
+  models.UserResponse:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      is_verified:
+        type: boolean
+      name:
+        type: string
+      phone:
+        type: string
+      refresh_token:
+        type: string
+      token:
+        type: string
+      updated_at:
+        type: string
     type: object
   models.UserUpdate:
     properties:
@@ -784,7 +774,7 @@ paths:
             - $ref: '#/definitions/responsehandler.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/models.User'
+                  $ref: '#/definitions/models.UserResponse'
               type: object
         "400":
           description: Bad Request
