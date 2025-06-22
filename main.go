@@ -26,7 +26,6 @@ func main() {
 	e := echo.New()
 	e.Validator = utils.NewValidator()
 	e.HTTPErrorHandler = middleware.ErrorHandler
-
 	e.Use(middleware.LogrusLogger())
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
