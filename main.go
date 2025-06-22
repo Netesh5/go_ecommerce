@@ -25,6 +25,7 @@ func main() {
 	config := config.LoadConfig()
 	e := echo.New()
 	e.Validator = utils.NewValidator()
+	e.Use(middleware.CORSMiddleware())
 	e.HTTPErrorHandler = middleware.ErrorHandler
 	e.Use(middleware.LogrusLogger())
 
