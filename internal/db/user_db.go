@@ -9,7 +9,7 @@ import (
 )
 
 func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
-	stmt, err := db.Db.Prepare(`SELECT * FROM users WHERE email = $1`)
+	stmt, err := db.Db.Prepare(`SELECT id,name,email,password,phone,token,refresh_token,created_at,updated_at,is_verified FROM users WHERE email = $1`)
 	if err != nil {
 		return models.User{}, err
 	}
@@ -17,7 +17,7 @@ func (db *Postgres) GetUserByEmail(email string) (models.User, error) {
 
 	var user models.User
 	var userAddess []models.Address
-	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.Verfiy, &user.CreatedAt, &user.UpdatedAt)
+	err = stmt.QueryRow(email).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Phone, &user.Token, &user.RefreshToken, &user.CreatedAt, &user.UpdatedAt, &user.Verfiy)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// For signup checks, this means the email is not registered yet
