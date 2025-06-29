@@ -18,6 +18,7 @@ type Config struct {
 	DbConfig         DBCOfig    `yaml:"db" env-required:"true"`
 	OtpConfig        OTPConfig  `env-required:"true"`
 	CloudinaryConfig Cloudinary `env-required:"true"`
+	GoogleAuth       GoogleAuth `env-required:"true"`
 }
 type HttpServer struct {
 	Address string
@@ -41,6 +42,12 @@ type Cloudinary struct {
 	CloudName string
 	APIKey    string
 	APISecret string
+}
+
+type GoogleAuth struct {
+	ClientId     string
+	ClientSecret string
+	CallbackUrl  string
 }
 
 func LoadConfig() *Config {
@@ -80,6 +87,11 @@ func LoadConfig() *Config {
 	config.CloudinaryConfig.CloudName = os.Getenv("CLOUDINARY_NAME")
 	config.CloudinaryConfig.APIKey = os.Getenv("CLOUDINARY_API_KEY")
 	config.CloudinaryConfig.APISecret = os.Getenv("CLOUDINARY_API_SECRET")
+
+	//Google Auth
+	config.GoogleAuth.ClientId = os.Getenv("CLIENT_ID")
+	config.GoogleAuth.ClientSecret = os.Getenv("CLIENT_SECRET")
+	config.GoogleAuth.CallbackUrl = os.Getenv("CALLBACK_URL")
 
 	if port, err := strconv.Atoi(os.Getenv("DB_PORT")); err == nil {
 		config.DbConfig.Port = port
